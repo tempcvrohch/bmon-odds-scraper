@@ -19,8 +19,8 @@ public class BmonOddsScraperApplication {
 	}
 
 	private void startChrome() {
-		var currentSport = "Basketball";
-		var currentMarket = "Money Line";
+		var sportName = "Table Tennis";
+		var marketName = "Current Game";
 
 		System.out.println("startChrome");
 		System.setProperty("webdriver.chrome.driver", "bin\\chromedriver.exe");
@@ -32,8 +32,8 @@ public class BmonOddsScraperApplication {
 
 		try {
 			Landing.chooseLanguageAndNavigate(webDriver, "English", "https://bet365.com/#/IP/");
-			InPlay.OpenSportOnName(webDriver, "Basketball");
-			InPlay.ScrapeLiveGamesData(webDriver, currentSport);
+			InPlay.OpenSportOnName(webDriver, sportName);
+			InPlay.ScrapeLiveGamesData(webDriver, sportName, marketName);
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}

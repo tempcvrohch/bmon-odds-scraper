@@ -1,7 +1,7 @@
 package com.rohanch.bmonoddsscraper.pages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rohanch.bmonoddsscraper.models.Sport;
+import com.rohanch.bmonoddsscraper.models.Match;
 import com.rohanch.bmonoddsscraper.utils.Inject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -15,8 +15,8 @@ public class InPlay {
 		sportSelectElement.click();
 	}
 
-	public static void ScrapeLiveGamesData(WebDriver webDriver, String sportName) throws Exception {
-		var expression = Inject.constructJSExpressionWithFile("return getSports();", "assets\\inject\\inplay-matches-helper.js");
+	public static void ScrapeLiveGamesData(WebDriver webDriver, String sportName, String marketName) throws Exception {
+		var expression = Inject.constructJSExpressionWithFile(String.format("return ReadOddDataOnBasicMarket(\"%s\",\"%s\");", sportName, marketName), "assets\\inject\\inplay-matches-helper.js");
 
 		var res = ((JavascriptExecutor) webDriver).executeScript(expression);
 		if (res == null) {
@@ -24,7 +24,7 @@ public class InPlay {
 		}
 
 		ObjectMapper mapper = new ObjectMapper();
-		Sport[] sports = mapper.convertValue(res, Sport[].class);
+		Match[] matches = mapper.convertValue(res, Match[].class);
 
 
 	}
