@@ -25,7 +25,5 @@ public class InPlay {
 
 		ObjectMapper mapper = new ObjectMapper();
 		Match[] matches = mapper.convertValue(res, Match[].class);
-
-
 	}
 }

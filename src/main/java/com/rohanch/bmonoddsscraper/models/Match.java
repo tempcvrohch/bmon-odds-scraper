@@ -1,11 +1,11 @@
-
 package com.rohanch.bmonoddsscraper.models;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -14,32 +14,33 @@ import java.util.Map;
 		"sportName",
 		"leagueName",
 		"setScore",
-		"players"
+		"matchState"
 })
+
 public class Match {
 
+	@Id
 	@JsonProperty("id")
-	private String id;
+	private Long id;
 	@JsonProperty("name")
 	private String name;
 	@JsonProperty("sportName")
 	private String sportName;
 	@JsonProperty("leagueName")
 	private String leagueName;
-	@JsonProperty("setScore")
-	private String setScore;
-	@JsonProperty("players")
-	private List<Player> players = null;
-	@JsonIgnore
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+	@JsonInclude()
+	@Transient
+	@JsonProperty("matchState")
+	private MatchState matchState = null;
 
 	@JsonProperty("id")
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
 	@JsonProperty("id")
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -73,34 +74,13 @@ public class Match {
 		this.leagueName = leagueName;
 	}
 
-	@JsonProperty("setScore")
-	public String getSetScore() {
-		return setScore;
+	@JsonProperty("matchState")
+	public MatchState getMatchState() {
+		return matchState;
 	}
 
-	@JsonProperty("setScore")
-	public void setSetScore(String setScore) {
-		this.setScore = setScore;
+	@JsonProperty("matchState")
+	public void setMatchState(MatchState matchState) {
+		this.matchState = matchState;
 	}
-
-	@JsonProperty("players")
-	public List<Player> getPlayers() {
-		return players;
-	}
-
-	@JsonProperty("players")
-	public void setPlayers(List<Player> players) {
-		this.players = players;
-	}
-
-	@JsonAnyGetter
-	public Map<String, Object> getAdditionalProperties() {
-		return this.additionalProperties;
-	}
-
-	@JsonAnySetter
-	public void setAdditionalProperty(String name, Object value) {
-		this.additionalProperties.put(name, value);
-	}
-
 }

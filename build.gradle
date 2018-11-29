@@ -29,7 +29,12 @@ dependencies {
 	compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.5'
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
 
-//	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+
+	runtime('org.springframework.boot:spring-boot-devtools')
+	runtime('org.postgresql:postgresql')
+
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
 	implementation('org.springframework.boot:spring-boot-starter-hateoas')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }

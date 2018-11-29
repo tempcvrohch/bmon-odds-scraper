@@ -56,57 +56,67 @@ function formatMatchesFromMatchedMarkets(sportName, matchedMarkets) {
 
         let playerNames = events[0].data.NA.split(' v ')
 
-        let players = []
+        let marketStates = []
 
         if (!matchedMarket._actualChildren[0] || !matchedMarket._actualChildren[0]._actualChildren) {
             continue
         }
 
-        let playerChildren
+        let marketChildren
         if (matchedMarket._actualChildren[0] && matchedMarket._actualChildren[0].nodeName === 'PA') {
-            playerChildren = matchedMarket._actualChildren
+            marketChildren = matchedMarket._actualChildren
         } else if (matchedMarket._actualChildren[0] && matchedMarket._actualChildren[0].nodeName === 'CO') {
-            playerChildren = matchedMarket._actualChildren[0]._actualChildren
+            marketChildren = matchedMarket._actualChildren[0]._actualChildren
         } else {
             continue
         }
 
-        for (let i = 0; i < playerChildren.length; i++) {
-            if (playerChildren[i].data.SU === '1') {
-                playerChildren[i].data.OD = '999/1' //make sure to record but make it obvious the market was suspended at this time
+        for (let i = 0; i < marketChildren.length; i++) {
+            if (marketChildren[i].data.SU === '1') {
+                marketChildren[i].data.OD = '999/1' //make sure to record but make it obvious the market was suspended at this time
             }
 
-            players.push(createPlayerObject(playerNames[i], playerChildren[i].data))
+            marketStates.push(createMarketStateObject(playerNames[i], marketChildren[i].data, matchedMarket))
         }
 
-        let match = createMatchObject(sportName, events[0].data, players)
-        match.currentMarket = matchedMarket.data.NA
+		let matchState = createMatchStateObject(sportName, events[0].data, marketStates)
+        let match = createMatchObject(sportName, events[0].data, matchState)
         matches.push(match)
     }
 
     return matches
 }
 
-function createPlayerObject(playerName, data) {
+function createMarketStateObject(playerName, data, matchedMarket) {
     return {
+    	marketName: matchedMarket.data.NA,
         name: playerName,
-        idFi: data.FI,
-        idId: data.ID,
+        idFi: +data.FI,
+        idId: +data.ID,
         suspended: data.SU,
         odd: data.OD
     }
 }
 
-function createMatchObject(sportName, data, players) {
+function createMatchStateObject(sportName, data, marketStates) {
     return {
-        id: data.ID,
+        pointScore: data.XP,
+        servingIndex: data.PI,
+        setScore: data.SS,
+        marketStates
+    }
+}
+
+function createMatchObject(sportName, data, matchState) {
+    return {
+        id: +data.ID,
         name: data.NA,
         sportName: sportName,
         leagueName: data.CT,
         pointScore: data.XP,
         servingIndex: data.PI,
         setScore: data.SS,
-        players
+        matchState
     }
 }
 
