@@ -7,30 +7,34 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+		"marketName",
 		"name",
-		"idFi",
-		"idId",
+		"fixtureId",
+		"betId",
 		"suspended",
 		"odd"
 })
+
+@Entity
+@Table(name = "market_states")
 public class MarketState {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonProperty("id")
+	private Long id;
 
 	@JsonProperty("marketName")
 	private String marketName;
 	@JsonProperty("name")
-	private String name;
-	@JsonProperty("idFi")
-	private Long idFi;
-	@JsonProperty("idId")
-	@Id
-	private Long idId;
+	private String playerName;
+	@JsonProperty("fixtureId")
+	private Long fixtureId;
+	@JsonProperty("betId")
+	private Long betId;
 	@JsonProperty("suspended")
 	private String suspended;
 	@JsonProperty("odd")
@@ -43,33 +47,33 @@ public class MarketState {
 	private MatchState matchState;
 
 	@JsonProperty("name")
-	public String getName() {
-		return name;
+	public String getPlayerName() {
+		return playerName;
 	}
 
 	@JsonProperty("name")
-	public void setName(String name) {
-		this.name = name;
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
 	}
 
-	@JsonProperty("idFi")
-	public Long getIdFi() {
-		return idFi;
+	@JsonProperty("fixtureId")
+	public Long getFixtureId() {
+		return fixtureId;
 	}
 
-	@JsonProperty("idFi")
-	public void setIdFi(Long idFi) {
-		this.idFi = idFi;
+	@JsonProperty("fixtureId")
+	public void setFixtureId(Long fixtureId) {
+		this.fixtureId = fixtureId;
 	}
 
-	@JsonProperty("idId")
-	public Long getIdId() {
-		return idId;
+	@JsonProperty("betId")
+	public Long getBetId() {
+		return betId;
 	}
 
-	@JsonProperty("idId")
-	public void setIdId(Long idId) {
-		this.idId = idId;
+	@JsonProperty("betId")
+	public void setBetId(Long betId) {
+		this.betId = betId;
 	}
 
 	@JsonProperty("suspended")
@@ -100,11 +104,23 @@ public class MarketState {
 		this.matchState = matchState;
 	}
 
+	@JsonProperty("marketName")
 	public String getMarketName() {
 		return marketName;
 	}
 
+	@JsonProperty("marketName")
 	public void setMarketName(String marketName) {
 		this.marketName = marketName;
+	}
+
+	@JsonProperty("id")
+	public Long getId() {
+		return id;
+	}
+
+	@JsonProperty("id")
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

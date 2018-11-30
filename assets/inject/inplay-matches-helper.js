@@ -90,9 +90,9 @@ function formatMatchesFromMatchedMarkets(sportName, matchedMarkets) {
 function createMarketStateObject(playerName, data, matchedMarket) {
     return {
     	marketName: matchedMarket.data.NA,
-        name: playerName,
-        idFi: +data.FI,
-        idId: +data.ID,
+        playerName: playerName,
+        betId: +data.FI,
+        fixtureId: +data.ID,
         suspended: data.SU,
         odd: data.OD
     }
@@ -113,9 +113,6 @@ function createMatchObject(sportName, data, matchState) {
         name: data.NA,
         sportName: sportName,
         leagueName: data.CT,
-        pointScore: data.XP,
-        servingIndex: data.PI,
-        setScore: data.SS,
         matchState
     }
 }

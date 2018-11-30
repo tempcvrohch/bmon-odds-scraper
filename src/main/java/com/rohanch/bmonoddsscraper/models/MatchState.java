@@ -12,14 +12,18 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-		"id",
 		"setScore",
-		"pointScore"
+		"pointScore",
+		"marketStates",
+		"servingIndex"
 })
 
+@Entity
+@Table(name = "matches_states")
 public class MatchState {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty("id")
 	private Long id;
 
@@ -28,6 +32,9 @@ public class MatchState {
 
 	@JsonProperty("pointScore")
 	private String pointScore;
+
+	@JsonProperty("servingIndex")
+	private String servingIndex;
 
 	@JsonInclude()
 	@Transient
@@ -78,5 +85,15 @@ public class MatchState {
 	@JsonProperty("pointScore")
 	public void setPointScore(String pointScore) {
 		this.pointScore = pointScore;
+	}
+
+	@JsonProperty("servingIndex")
+	public String getServingIndex() {
+		return servingIndex;
+	}
+
+	@JsonProperty("servingIndex")
+	public void setServingIndex(String servingIndex) {
+		this.servingIndex = servingIndex;
 	}
 }

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -12,11 +14,11 @@ import javax.persistence.Transient;
 		"id",
 		"name",
 		"sportName",
-		"leagueName",
-		"setScore",
-		"matchState"
+		"leagueName"
 })
 
+@Entity
+@Table(name = "matches")
 public class Match {
 
 	@Id
@@ -28,7 +30,6 @@ public class Match {
 	private String sportName;
 	@JsonProperty("leagueName")
 	private String leagueName;
-
 	@JsonInclude()
 	@Transient
 	@JsonProperty("matchState")

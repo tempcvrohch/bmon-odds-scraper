@@ -26,7 +26,7 @@ public class BmonOddsScraperApplication {
 		System.setProperty("webdriver.chrome.driver", "bin\\chromedriver.exe");
 		WebDriver webDriver = new ChromeDriver();
 		webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		webDriver.manage().window().setSize(new Dimension(1600, 900));
+		webDriver.manage().window().setSize(new Dimension(1920, 900));
 
 		webDriver.get("https://bet365.com");
 
