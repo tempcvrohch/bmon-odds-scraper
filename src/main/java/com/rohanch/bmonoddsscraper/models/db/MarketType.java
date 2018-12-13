@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class MarketType {
 	@JsonProperty("id")
 	private String id;
+
 	@JsonProperty("name")
 	private String name;
 

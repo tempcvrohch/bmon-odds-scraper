@@ -16,10 +16,13 @@ import java.util.List;
 public class Sport {
 	@JsonProperty("sportName")
 	private String sportName;
+
 	@JsonProperty("sportId")
 	private String sportId;
+
 	@JsonProperty("wsId")
 	private String wsId;
+
 	@JsonProperty("marketTypes")
 	private List<MarketType> marketTypes = null;
 

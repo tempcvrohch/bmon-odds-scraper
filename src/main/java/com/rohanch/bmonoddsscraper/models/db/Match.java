@@ -22,14 +22,20 @@ public class Match extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
 	private Long id;
+
+	@Column(unique = true)
 	@JsonProperty("bId")
 	private String bId;
+
 	@JsonProperty("name")
 	private String name;
+
 	@JsonProperty("sportName")
 	private String sportName;
+
 	@JsonProperty("leagueName")
 	private String leagueName;
+
 	@JsonInclude()
 	@Transient
 	@JsonProperty("matchState")

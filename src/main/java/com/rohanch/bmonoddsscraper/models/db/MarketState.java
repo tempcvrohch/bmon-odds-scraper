@@ -29,14 +29,19 @@ public class MarketState extends BaseEntity {
 
 	@JsonProperty("marketName")
 	private String marketName;
+
 	@JsonProperty("playerName")
 	private String playerName;
+
 	@JsonProperty("fixtureId")
 	private Long fixtureId;
+
 	@JsonProperty("betId")
 	private Long betId;
+
 	@JsonProperty("suspended")
 	private String suspended;
+
 	@JsonProperty("odd")
 	private String odd;
 
