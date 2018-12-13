@@ -1,5 +1,6 @@
 package com.rohanch.bmonoddsscraper.controllers;
 
+import com.rohanch.bmonoddsscraper.models.request.ChromeControlRequest;
 import com.rohanch.bmonoddsscraper.pages.InPlay;
 import com.rohanch.bmonoddsscraper.pages.Landing;
 import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
@@ -8,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
@@ -21,11 +23,7 @@ public class ChromeController {
 	private MatchRepository matchRepository;
 
 	@PostMapping("/chrome")
-	public void StartChrome() {
-		var sportName = "Tennis";
-		var marketName = "Next Game";
-
-		System.out.println("startChrome");
+	public void StartChrome(@RequestBody ChromeControlRequest body) {
 		System.setProperty("webdriver.chrome.driver", "bin\\chromedriver.exe");
 		WebDriver webDriver = new ChromeDriver();
 		webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -35,7 +33,7 @@ public class ChromeController {
 
 		try {
 			Landing.chooseLanguageAndNavigate(webDriver, "English", "https://bet365.com/#/IP/");
-			InPlay.OpenSportOnName(webDriver, sportName);
+			InPlay.OpenSportOnName(webDriver, body.getSportName());
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}
@@ -44,16 +42,13 @@ public class ChromeController {
 	}
 
 	@PostMapping("/scrape")
-	public void Scrape() {
+	public void Scrape(@RequestBody ChromeControlRequest body) {
 		if (webDriver == null) {
 			return;
 		}
 
-		var sportName = "Tennis";
-		var marketName = "Next Game";
-
 		try {
-			var matches = InPlay.ScrapeLiveGamesData(webDriver, sportName, marketName);
+			var matches = InPlay.ScrapeLiveGamesData(webDriver, body.getSportName(), body.getMarketName());
 			if (matches.length > 0) {
 				matchRepository.saveAll(Arrays.asList(matches));
 			} else {
