@@ -20,10 +20,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "matches_states")
-public class MatchState {
+public class MatchState extends BaseEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
 	private Long id;
 
@@ -41,7 +41,7 @@ public class MatchState {
 	@JsonProperty("marketStates")
 	private List<MarketState> marketStates = null;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "match_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore

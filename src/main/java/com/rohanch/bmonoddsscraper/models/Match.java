@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
 		"id",
+		"bId",
 		"name",
 		"sportName",
 		"leagueName"
@@ -19,11 +17,14 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "matches")
-public class Match {
+public class Match extends BaseEntity {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
 	private Long id;
+	@JsonProperty("bId")
+	private String bId;
 	@JsonProperty("name")
 	private String name;
 	@JsonProperty("sportName")
@@ -43,6 +44,14 @@ public class Match {
 	@JsonProperty("id")
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getbId() {
+		return bId;
+	}
+
+	public void setbId(String bId) {
+		this.bId = bId;
 	}
 
 	@JsonProperty("name")

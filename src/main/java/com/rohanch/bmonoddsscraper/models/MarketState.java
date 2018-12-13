@@ -12,7 +12,7 @@ import javax.persistence.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
 		"marketName",
-		"name",
+		"playerName",
 		"fixtureId",
 		"betId",
 		"suspended",
@@ -21,15 +21,15 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "market_states")
-public class MarketState {
+public class MarketState extends BaseEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
 	private Long id;
 
 	@JsonProperty("marketName")
 	private String marketName;
-	@JsonProperty("name")
+	@JsonProperty("playerName")
 	private String playerName;
 	@JsonProperty("fixtureId")
 	private Long fixtureId;
@@ -40,18 +40,18 @@ public class MarketState {
 	@JsonProperty("odd")
 	private String odd;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "match_state_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
 	private MatchState matchState;
 
-	@JsonProperty("name")
+	@JsonProperty("playerName")
 	public String getPlayerName() {
 		return playerName;
 	}
 
-	@JsonProperty("name")
+	@JsonProperty("playerName")
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
 	}

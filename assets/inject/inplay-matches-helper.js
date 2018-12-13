@@ -40,10 +40,10 @@ function ReadOddDataOnBasicMarket(sportName, marketName) {
     }
 
     let matchedMarkets = lookupNameInTree(market.id, 'MA')
-    return formatMatchesFromMatchedMarkets(sportName, matchedMarkets)
+    return formatMatchesFromMatchedMarkets(sportName, matchedMarkets, market)
 }
 
-function formatMatchesFromMatchedMarkets(sportName, matchedMarkets) {
+function formatMatchesFromMatchedMarkets(sportName, matchedMarkets, market) {
     let matches = []
 
     M: for (let matchedMarket of matchedMarkets) {
@@ -54,7 +54,12 @@ function formatMatchesFromMatchedMarkets(sportName, matchedMarkets) {
             continue
         }
 
-        let playerNames = events[0].data.NA.split(' v ')
+		let separator = getTeamSeparator(sportName)
+		if(!separator){
+			console.log('Could not find separator for sportName:', sportName)
+			return
+		}
+        let playerNames = events[0].data.NA.split(separator)
 
         let marketStates = []
 
@@ -76,7 +81,7 @@ function formatMatchesFromMatchedMarkets(sportName, matchedMarkets) {
                 marketChildren[i].data.OD = '999/1' //make sure to record but make it obvious the market was suspended at this time
             }
 
-            marketStates.push(createMarketStateObject(playerNames[i], marketChildren[i].data, matchedMarket))
+            marketStates.push(createMarketStateObject(playerNames[i], marketChildren[i].data, market))
         }
 
 		let matchState = createMatchStateObject(sportName, events[0].data, marketStates)
@@ -87,9 +92,20 @@ function formatMatchesFromMatchedMarkets(sportName, matchedMarkets) {
     return matches
 }
 
-function createMarketStateObject(playerName, data, matchedMarket) {
+function getTeamSeparator(sportName){
+	let knowSeparators = {
+		'Tennis': ' v ',
+		'Table Tennis': ' v ',
+		'Soccer': ' vs ',
+		'Basketball': ' vs '
+	}
+
+	return knowSeparators[sportName]
+}
+
+function createMarketStateObject(playerName, data, market) {
     return {
-    	marketName: matchedMarket.data.NA,
+    	marketName: market.name,
         playerName: playerName,
         betId: +data.FI,
         fixtureId: +data.ID,
@@ -109,7 +125,7 @@ function createMatchStateObject(sportName, data, marketStates) {
 
 function createMatchObject(sportName, data, matchState) {
     return {
-        id: +data.ID,
+        bId: data.ID,
         name: data.NA,
         sportName: sportName,
         leagueName: data.CT,
