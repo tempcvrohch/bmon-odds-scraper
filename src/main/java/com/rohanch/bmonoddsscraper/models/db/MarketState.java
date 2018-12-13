@@ -46,6 +46,26 @@ public class MarketState extends BaseEntity {
 	@JsonIgnore
 	private MatchState matchState;
 
+	@JsonProperty("id")
+	public Long getId() {
+		return id;
+	}
+
+	@JsonProperty("id")
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@JsonProperty("marketName")
+	public String getMarketName() {
+		return marketName;
+	}
+
+	@JsonProperty("marketName")
+	public void setMarketName(String marketName) {
+		this.marketName = marketName;
+	}
+
 	@JsonProperty("playerName")
 	public String getPlayerName() {
 		return playerName;
@@ -102,25 +122,5 @@ public class MarketState extends BaseEntity {
 
 	public void setMatchState(MatchState matchState) {
 		this.matchState = matchState;
-	}
-
-	@JsonProperty("marketName")
-	public String getMarketName() {
-		return marketName;
-	}
-
-	@JsonProperty("marketName")
-	public void setMarketName(String marketName) {
-		this.marketName = marketName;
-	}
-
-	@JsonProperty("id")
-	public Long getId() {
-		return id;
-	}
-
-	@JsonProperty("id")
-	public void setId(Long id) {
-		this.id = id;
 	}
 }

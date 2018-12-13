@@ -1,10 +1,10 @@
 package com.rohanch.bmonoddsscraper.models.db;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -14,7 +14,6 @@ import java.util.Map;
 		"marketTypes"
 })
 public class Sport {
-
 	@JsonProperty("sportName")
 	private String sportName;
 	@JsonProperty("sportId")
@@ -23,8 +22,6 @@ public class Sport {
 	private String wsId;
 	@JsonProperty("marketTypes")
 	private List<MarketType> marketTypes = null;
-	@JsonIgnore
-	private Map<String, Object> additionalProperties = new HashMap<>();
 
 	@JsonProperty("sportName")
 	public String getSportName() {
@@ -65,15 +62,4 @@ public class Sport {
 	public void setMarketTypes(List<MarketType> marketTypes) {
 		this.marketTypes = marketTypes;
 	}
-
-	@JsonAnyGetter
-	public Map<String, Object> getAdditionalProperties() {
-		return this.additionalProperties;
-	}
-
-	@JsonAnySetter
-	public void setAdditionalProperty(String name, Object value) {
-		this.additionalProperties.put(name, value);
-	}
-
 }

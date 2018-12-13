@@ -14,14 +14,13 @@ import java.util.List;
 @JsonPropertyOrder({
 		"setScore",
 		"pointScore",
+		"servingIndex",
 		"marketStates",
-		"servingIndex"
 })
 
 @Entity
 @Table(name = "matches_states")
 public class MatchState extends BaseEntity {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
@@ -67,16 +66,6 @@ public class MatchState extends BaseEntity {
 		this.setScore = setScore;
 	}
 
-	@JsonProperty("marketStates")
-	public List<MarketState> getMarketStates() {
-		return marketStates;
-	}
-
-	@JsonProperty("marketStates")
-	public void setMarketStates(List<MarketState> marketStates) {
-		this.marketStates = marketStates;
-	}
-
 	@JsonProperty("pointScore")
 	public String getPointScore() {
 		return pointScore;
@@ -95,5 +84,15 @@ public class MatchState extends BaseEntity {
 	@JsonProperty("servingIndex")
 	public void setServingIndex(String servingIndex) {
 		this.servingIndex = servingIndex;
+	}
+
+	@JsonProperty("marketStates")
+	public List<MarketState> getMarketStates() {
+		return marketStates;
+	}
+
+	@JsonProperty("marketStates")
+	public void setMarketStates(List<MarketState> marketStates) {
+		this.marketStates = marketStates;
 	}
 }

@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 		"name"
 })
 public class MarketType {
-
 	@JsonProperty("id")
 	private String id;
 	@JsonProperty("name")
@@ -35,5 +34,4 @@ public class MarketType {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 }

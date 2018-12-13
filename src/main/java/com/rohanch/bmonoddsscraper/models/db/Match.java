@@ -18,7 +18,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "matches")
 public class Match extends BaseEntity {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
