@@ -1,6 +1,6 @@
 package com.rohanch.bmonoddsscraper.controllers;
 
-import com.rohanch.bmonoddsscraper.models.Match;
+import com.rohanch.bmonoddsscraper.models.db.Match;
 import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;

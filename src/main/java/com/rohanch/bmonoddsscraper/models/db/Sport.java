@@ -1,4 +1,4 @@
-package com.rohanch.bmonoddsscraper.models;
+package com.rohanch.bmonoddsscraper.models.db;
 
 import com.fasterxml.jackson.annotation.*;
 
@@ -24,7 +24,7 @@ public class Sport {
 	@JsonProperty("marketTypes")
 	private List<MarketType> marketTypes = null;
 	@JsonIgnore
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+	private Map<String, Object> additionalProperties = new HashMap<>();
 
 	@JsonProperty("sportName")
 	public String getSportName() {

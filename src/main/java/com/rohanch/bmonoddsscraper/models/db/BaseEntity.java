@@ -1,4 +1,4 @@
-package com.rohanch.bmonoddsscraper.models;
+package com.rohanch.bmonoddsscraper.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;

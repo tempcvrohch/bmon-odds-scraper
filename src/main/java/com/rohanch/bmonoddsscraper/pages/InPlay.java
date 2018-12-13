@@ -1,7 +1,7 @@
 package com.rohanch.bmonoddsscraper.pages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rohanch.bmonoddsscraper.models.Match;
+import com.rohanch.bmonoddsscraper.models.db.Match;
 import com.rohanch.bmonoddsscraper.utils.Inject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
