@@ -17,29 +17,32 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "matches")
-public class Match extends BaseEntity {
+public class MatchEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
 	private Long id;
 
-	@Column(unique = true)
 	@JsonProperty("bId")
+	@Column(name = "b_id", unique = true, nullable = false)
 	private String bId;
 
 	@JsonProperty("name")
+	@Column(name = "name", nullable = false)
 	private String name;
 
 	@JsonProperty("sportName")
+	@Column(name = "sport_name", nullable = false)
 	private String sportName;
 
 	@JsonProperty("leagueName")
+	@Column(name = "league_name", nullable = false)
 	private String leagueName;
 
 	@JsonInclude()
 	@Transient
 	@JsonProperty("matchState")
-	private MatchState matchState = null;
+	private MatchStateEntity matchState = null;
 
 	@JsonProperty("id")
 	public Long getId() {
@@ -90,12 +93,12 @@ public class Match extends BaseEntity {
 	}
 
 	@JsonProperty("matchState")
-	public MatchState getMatchState() {
+	public MatchStateEntity getMatchState() {
 		return matchState;
 	}
 
 	@JsonProperty("matchState")
-	public void setMatchState(MatchState matchState) {
+	public void setMatchState(MatchStateEntity matchState) {
 		this.matchState = matchState;
 	}
 }

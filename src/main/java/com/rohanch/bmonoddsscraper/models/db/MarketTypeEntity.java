@@ -4,16 +4,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
 		"id",
 		"name"
 })
-public class MarketType {
+public class MarketTypeEntity {
+	@Id
 	@JsonProperty("id")
 	private String id;
 
 	@JsonProperty("name")
+	@Column(name = "name", nullable = false)
 	private String name;
 
 	@JsonProperty("id")

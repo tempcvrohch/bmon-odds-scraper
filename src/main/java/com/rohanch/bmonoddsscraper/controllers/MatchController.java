@@ -1,6 +1,6 @@
 package com.rohanch.bmonoddsscraper.controllers;
 
-import com.rohanch.bmonoddsscraper.models.db.Match;
+import com.rohanch.bmonoddsscraper.models.db.MatchEntity;
 import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +13,7 @@ public class MatchController {
 	private MatchRepository matchRepository;
 
 	@GetMapping("/matches")
-	public Iterable<Match> getMatches(Pageable pageable) {
+	public Iterable<MatchEntity> getMatches(Pageable pageable) {
 		return matchRepository.findAll(pageable);
 	}
 }

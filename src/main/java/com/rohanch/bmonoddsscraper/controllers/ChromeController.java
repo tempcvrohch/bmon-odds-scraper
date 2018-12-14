@@ -1,8 +1,8 @@
 package com.rohanch.bmonoddsscraper.controllers;
 
 import com.rohanch.bmonoddsscraper.models.request.ChromeControlRequest;
-import com.rohanch.bmonoddsscraper.pages.InPlay;
-import com.rohanch.bmonoddsscraper.pages.Landing;
+import com.rohanch.bmonoddsscraper.pages.InPlayPage;
+import com.rohanch.bmonoddsscraper.pages.LandingPage;
 import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -32,8 +32,8 @@ public class ChromeController {
 		webDriver.get("https://bet365.com");
 
 		try {
-			Landing.chooseLanguageAndNavigate(webDriver, "English", "https://bet365.com/#/IP/");
-			InPlay.OpenSportOnName(webDriver, body.getSportName());
+			LandingPage.chooseLanguageAndNavigate(webDriver, "English", "https://bet365.com/#/IP/");
+			InPlayPage.OpenSportOnName(webDriver, body.getSportName());
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}
@@ -48,7 +48,7 @@ public class ChromeController {
 		}
 
 		try {
-			var matches = InPlay.ScrapeLiveGamesData(webDriver, body.getSportName(), body.getMarketName());
+			var matches = InPlayPage.ScrapeLiveGamesData(webDriver, body.getSportName(), body.getMarketName());
 			if (matches.length > 0) {
 				matchRepository.saveAll(Arrays.asList(matches));
 			} else {

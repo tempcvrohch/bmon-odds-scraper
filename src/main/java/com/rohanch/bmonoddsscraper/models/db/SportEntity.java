@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.persistence.Column;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -11,20 +12,23 @@ import java.util.List;
 		"sportName",
 		"sportId",
 		"wsId",
-		"marketTypes"
+		"marketTypeEntities"
 })
-public class Sport {
+public class SportEntity {
 	@JsonProperty("sportName")
+	@Column(name = "sport_name", nullable = false)
 	private String sportName;
 
 	@JsonProperty("sportId")
+	@Column(name = "sport_id", nullable = false)
 	private String sportId;
 
 	@JsonProperty("wsId")
+	@Column(name = "ws_id", nullable = false)
 	private String wsId;
 
-	@JsonProperty("marketTypes")
-	private List<MarketType> marketTypes = null;
+	@JsonProperty("marketTypeEntities")
+	private List<MarketTypeEntity> marketTypeEntities = null;
 
 	@JsonProperty("sportName")
 	public String getSportName() {
@@ -56,13 +60,13 @@ public class Sport {
 		this.wsId = wsId;
 	}
 
-	@JsonProperty("marketTypes")
-	public List<MarketType> getMarketTypes() {
-		return marketTypes;
+	@JsonProperty("marketTypeEntities")
+	public List<MarketTypeEntity> getMarketTypeEntities() {
+		return marketTypeEntities;
 	}
 
-	@JsonProperty("marketTypes")
-	public void setMarketTypes(List<MarketType> marketTypes) {
-		this.marketTypes = marketTypes;
+	@JsonProperty("marketTypeEntities")
+	public void setMarketTypeEntities(List<MarketTypeEntity> marketTypeEntities) {
+		this.marketTypeEntities = marketTypeEntities;
 	}
 }

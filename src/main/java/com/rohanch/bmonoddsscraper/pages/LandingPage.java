@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class Landing {
+public class LandingPage {
 	public static void chooseLanguageAndNavigate(WebDriver webDriver, String lang, String targetPageURL) throws Exception {
 		WebElement langList = webDriver.findElement(By.className("lpnm"));
 		var languages = langList.findElements(By.tagName("a"));

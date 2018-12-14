@@ -21,35 +21,41 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "market_states")
-public class MarketState extends BaseEntity {
+public class MarketStateEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
 	private Long id;
 
 	@JsonProperty("marketName")
+	@Column(name = "market_name", nullable = false)
 	private String marketName;
 
 	@JsonProperty("playerName")
+	@Column(name = "player_name", nullable = false)
 	private String playerName;
 
 	@JsonProperty("fixtureId")
+	@Column(name = "fixture_id", nullable = false)
 	private Long fixtureId;
 
 	@JsonProperty("betId")
+	@Column(name = "bet_id", nullable = false)
 	private Long betId;
 
 	@JsonProperty("suspended")
+	@Column(name = "bet_id", nullable = false)
 	private String suspended;
 
 	@JsonProperty("odd")
+	@Column(name = "odd", nullable = false)
 	private String odd;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "match_state_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
-	private MatchState matchState;
+	private MatchStateEntity matchState;
 
 	@JsonProperty("id")
 	public Long getId() {
@@ -121,11 +127,11 @@ public class MarketState extends BaseEntity {
 		this.odd = odd;
 	}
 
-	public MatchState getMatchState() {
+	public MatchStateEntity getMatchState() {
 		return matchState;
 	}
 
-	public void setMatchState(MatchState matchState) {
+	public void setMatchState(MatchStateEntity matchState) {
 		this.matchState = matchState;
 	}
 }

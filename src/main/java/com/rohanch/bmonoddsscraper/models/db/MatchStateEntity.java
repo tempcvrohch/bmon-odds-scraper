@@ -20,31 +20,34 @@ import java.util.List;
 
 @Entity
 @Table(name = "matches_states")
-public class MatchState extends BaseEntity {
+public class MatchStateEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
 	private Long id;
 
 	@JsonProperty("setScore")
+	@Column(name = "set_score", nullable = false)
 	private String setScore;
 
 	@JsonProperty("pointScore")
+	@Column(name = "point_score", nullable = false)
 	private String pointScore;
 
 	@JsonProperty("servingIndex")
+	@Column(name = "serving_index", nullable = false)
 	private String servingIndex;
 
 	@JsonInclude()
 	@Transient
 	@JsonProperty("marketStates")
-	private List<MarketState> marketStates = null;
+	private List<MarketStateEntity> marketStates = null;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "match_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
-	private Match match;
+	private MatchEntity matchEntity;
 
 	@JsonProperty("id")
 	public Long getId() {
@@ -87,12 +90,12 @@ public class MatchState extends BaseEntity {
 	}
 
 	@JsonProperty("marketStates")
-	public List<MarketState> getMarketStates() {
+	public List<MarketStateEntity> getMarketStates() {
 		return marketStates;
 	}
 
 	@JsonProperty("marketStates")
-	public void setMarketStates(List<MarketState> marketStates) {
+	public void setMarketStates(List<MarketStateEntity> marketStates) {
 		this.marketStates = marketStates;
 	}
 }
