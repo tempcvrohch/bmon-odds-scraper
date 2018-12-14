@@ -44,7 +44,7 @@ public class MarketStateEntity extends BaseEntity {
 	private Long betId;
 
 	@JsonProperty("suspended")
-	@Column(name = "bet_id", nullable = false)
+	@Column(name = "suspended", nullable = false)
 	private String suspended;
 
 	@JsonProperty("odd")
