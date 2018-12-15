@@ -57,7 +57,6 @@ public class LiveMatchesService {
 					.findFirst();
 
 			if (optMatch.isPresent()) {
-				//TODO: Not setting the Id causes a new match to be added even though at this point a match never gets persisted
 				updateMatchNestedElements(optMatch.get(), preparedMatch);
 				updated++;
 			} else {
