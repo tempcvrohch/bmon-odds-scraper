@@ -8,21 +8,30 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 @RestController
 public class ChromeController {
-	private WebDriver webDriver;
+	private HashMap<String, WebDriver> sportWebDrivers = new HashMap<>();
 
 	@Autowired
 	private LiveMatchesService liveMatchesService;
 
-	@PostMapping("/chrome/start")
-	public void StartChrome(@RequestBody ChromeControlRequest body) {
+	@PostMapping("/chrome")
+	public ResponseEntity StartChrome(@RequestBody ChromeControlRequest body) {
+		if (sportWebDrivers.containsKey(body.getSportName())) {
+			System.out.printf("ERROR: Chrome for \"%s\" is already active!\n", body.getSportName());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+
 		System.out.printf("Starting Chrome for \"%s\"\n", body.getSportName());
 
 		System.setProperty("webdriver.chrome.driver", "bin\\chromedriver.exe");
@@ -37,20 +46,37 @@ public class ChromeController {
 			InPlayPage.OpenSportOnName(webDriver, body.getSportName());
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
+			webDriver.close();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 
-		setWebDriver(webDriver);
+		sportWebDrivers.put(body.getSportName(), webDriver);
+		return ResponseEntity.ok().body(null);
+	}
+
+	@DeleteMapping("/chrome")
+	public ResponseEntity StopChrome(@RequestBody ChromeControlRequest body) {
+		if (!sportWebDrivers.containsKey(body.getSportName())) {
+			System.out.printf("ERROR: Cannot stop non-existing Chrome session for \"%s\"!\n", body.getSportName());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+
+		System.out.printf("Stopping Chrome for \"%s\"!\n", body.getSportName());
+		sportWebDrivers.get(body.getSportName()).close();
+		sportWebDrivers.remove(body.getSportName());
+		return ResponseEntity.ok().body(null);
 	}
 
 	@PostMapping("/chrome/scrape")
-	public void Scrape(@RequestBody ChromeControlRequest body) {
-		if (webDriver == null) {
-			return;
+	public ResponseEntity Scrape(@RequestBody ChromeControlRequest body) {
+		if (!sportWebDrivers.containsKey(body.getSportName())) {
+			System.out.printf("ERROR: No active chrome session for \"%s\", please start one first.\n", body.getSportName());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		}
 
 		System.out.printf("Scraping %s on market \"%s\"\n", body.getSportName(), body.getMarketName());
 		try {
-			var matches = InPlayPage.ScrapeLiveGamesData(webDriver, body.getSportName(), body.getMarketName());
+			var matches = InPlayPage.ScrapeLiveGamesData(sportWebDrivers.get(body.getSportName()), body.getSportName(), body.getMarketName());
 			if (matches.length > 0) {
 				liveMatchesService.UpdateMatches(matches);
 			} else {
@@ -58,14 +84,17 @@ public class ChromeController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
+
+		return ResponseEntity.ok().body(null);
 	}
 
-	public WebDriver getWebDriver() {
-		return webDriver;
+	public HashMap<String, WebDriver> getSportWebDrivers() {
+		return sportWebDrivers;
 	}
 
-	private void setWebDriver(WebDriver webDriver) {
-		this.webDriver = webDriver;
+	public void setSportWebDrivers(HashMap<String, WebDriver> sportWebDrivers) {
+		this.sportWebDrivers = sportWebDrivers;
 	}
 }
