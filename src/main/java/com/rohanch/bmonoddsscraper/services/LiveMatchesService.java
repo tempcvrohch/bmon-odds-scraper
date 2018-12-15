@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 @Service
 public class LiveMatchesService {
@@ -42,6 +45,10 @@ public class LiveMatchesService {
 		var created = 0;
 		var updated = 0;
 
+		if (persistedMatchEntities.size() == 0) {
+			loadInitialLiveMatchesFromDB();
+		}
+
 		for (var updatedMatch : updatedMatches) {
 			var preparedMatch = prepareMatchEntityForDB(updatedMatch); //TODO: updatedMatch = prepareMatchEntityForDB(updatedMatch); ?
 			var optMatch = persistedMatchEntities
@@ -60,6 +67,15 @@ public class LiveMatchesService {
 		}
 
 		System.out.printf("UpdateMatches: %d matches created and %d matches updated.\n", created, updated);
+	}
+
+	/**
+	 * In case of an application restart the persisted matches variable should be consistent with what is in the database.
+	 */
+	private void loadInitialLiveMatchesFromDB() {
+		var calendar = new GregorianCalendar();
+		calendar.add(Calendar.DATE, -1);
+		persistedMatchEntities = new ArrayList<>(matchRepository.findAfterTimestamp(new Timestamp(calendar.getTimeInMillis())));
 	}
 
 	/**
