@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -43,7 +44,7 @@ public class MatchStateEntity extends BaseEntity {
 	@JsonProperty("marketStates")
 	private List<MarketStateEntity> marketStates = null;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "match_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
@@ -97,5 +98,28 @@ public class MatchStateEntity extends BaseEntity {
 	@JsonProperty("marketStates")
 	public void setMarketStates(List<MarketStateEntity> marketStates) {
 		this.marketStates = marketStates;
+	}
+
+	public MatchEntity getMatchEntity() {
+		return matchEntity;
+	}
+
+	public void setMatchEntity(MatchEntity matchEntity) {
+		this.matchEntity = matchEntity;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MatchStateEntity that = (MatchStateEntity) o;
+		return Objects.equals(setScore, that.setScore) &&
+				Objects.equals(pointScore, that.pointScore) &&
+				Objects.equals(servingIndex, that.servingIndex);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(setScore, pointScore, servingIndex);
 	}
 }

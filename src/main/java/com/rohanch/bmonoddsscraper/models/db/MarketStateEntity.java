@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -45,13 +46,13 @@ public class MarketStateEntity extends BaseEntity {
 
 	@JsonProperty("suspended")
 	@Column(name = "suspended", nullable = false)
-	private String suspended;
+	private boolean suspended;
 
 	@JsonProperty("odd")
 	@Column(name = "odd", nullable = false)
 	private String odd;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "match_state_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
@@ -108,12 +109,12 @@ public class MarketStateEntity extends BaseEntity {
 	}
 
 	@JsonProperty("suspended")
-	public String getSuspended() {
+	public boolean isSuspended() {
 		return suspended;
 	}
 
 	@JsonProperty("suspended")
-	public void setSuspended(String suspended) {
+	public void setSuspended(boolean suspended) {
 		this.suspended = suspended;
 	}
 
@@ -133,5 +134,21 @@ public class MarketStateEntity extends BaseEntity {
 
 	public void setMatchState(MatchStateEntity matchState) {
 		this.matchState = matchState;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MarketStateEntity that = (MarketStateEntity) o;
+		return Objects.equals(fixtureId, that.fixtureId) &&
+				Objects.equals(betId, that.betId) &&
+				Objects.equals(suspended, that.suspended) &&
+				Objects.equals(odd, that.odd);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(fixtureId, betId, suspended, odd);
 	}
 }

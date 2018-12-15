@@ -11,7 +11,7 @@ public class InPlayPage {
 	public static void OpenSportOnName(WebDriver webDriver, String sportName) {
 		var sportSelectElement = webDriver.findElement(By.xpath(String.format("//%s[text()=\"%s\"]", "div", sportName)));
 
-		System.out.printf("Clicking sport: %s in InPlayPage page...\n", sportName);
+		System.out.printf("Clicking sport: \"%s\" in InPlayPage page\n", sportName);
 		sportSelectElement.click();
 	}
 

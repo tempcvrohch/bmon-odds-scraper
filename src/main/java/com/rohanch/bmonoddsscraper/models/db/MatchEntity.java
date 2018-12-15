@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -44,20 +45,20 @@ public class MatchEntity extends BaseEntity {
 	@JsonProperty("matchState")
 	private MatchStateEntity matchState = null;
 
-	@JsonProperty("id")
 	public Long getId() {
 		return id;
 	}
 
-	@JsonProperty("id")
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	@JsonProperty("bId")
 	public String getbId() {
 		return bId;
 	}
 
+	@JsonProperty("bId")
 	public void setbId(String bId) {
 		this.bId = bId;
 	}
@@ -100,5 +101,18 @@ public class MatchEntity extends BaseEntity {
 	@JsonProperty("matchState")
 	public void setMatchState(MatchStateEntity matchState) {
 		this.matchState = matchState;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MatchEntity that = (MatchEntity) o;
+		return Objects.equals(bId, that.bId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(bId);
 	}
 }

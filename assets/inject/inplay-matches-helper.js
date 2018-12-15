@@ -107,9 +107,9 @@ function createMarketStateObject(playerName, data, market) {
     return {
     	marketName: market.name,
         playerName: playerName,
-        betId: +data.FI,
-        fixtureId: +data.ID,
-        suspended: data.SU,
+        betId: +data.ID,
+        fixtureId: +data.FI,
+        suspended: data.SU === "1",
         odd: data.OD
     }
 }

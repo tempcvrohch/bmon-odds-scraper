@@ -3,7 +3,7 @@ package com.rohanch.bmonoddsscraper.controllers;
 import com.rohanch.bmonoddsscraper.models.request.ChromeControlRequest;
 import com.rohanch.bmonoddsscraper.pages.InPlayPage;
 import com.rohanch.bmonoddsscraper.pages.LandingPage;
-import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
+import com.rohanch.bmonoddsscraper.services.LiveMatchesService;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -20,10 +19,12 @@ public class ChromeController {
 	private WebDriver webDriver;
 
 	@Autowired
-	private MatchRepository matchRepository;
+	private LiveMatchesService liveMatchesService;
 
-	@PostMapping("/chrome")
+	@PostMapping("/chrome/start")
 	public void StartChrome(@RequestBody ChromeControlRequest body) {
+		System.out.printf("Starting Chrome for \"%s\"\n", body.getSportName());
+
 		System.setProperty("webdriver.chrome.driver", "bin\\chromedriver.exe");
 		WebDriver webDriver = new ChromeDriver();
 		webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -41,16 +42,17 @@ public class ChromeController {
 		setWebDriver(webDriver);
 	}
 
-	@PostMapping("/scrape")
+	@PostMapping("/chrome/scrape")
 	public void Scrape(@RequestBody ChromeControlRequest body) {
 		if (webDriver == null) {
 			return;
 		}
 
+		System.out.printf("Scraping %s on market \"%s\"\n", body.getSportName(), body.getMarketName());
 		try {
 			var matches = InPlayPage.ScrapeLiveGamesData(webDriver, body.getSportName(), body.getMarketName());
 			if (matches.length > 0) {
-				matchRepository.saveAll(Arrays.asList(matches));
+				liveMatchesService.UpdateMatches(matches);
 			} else {
 				System.out.println("No matches persisted");
 			}
