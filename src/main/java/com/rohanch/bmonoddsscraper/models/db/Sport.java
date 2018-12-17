@@ -14,7 +14,7 @@ import java.util.List;
 		"wsId",
 		"marketTypeEntities"
 })
-public class SportEntity {
+public class Sport {
 	@JsonProperty("sportName")
 	@Column(name = "sport_name", nullable = false)
 	private String sportName;
@@ -28,7 +28,7 @@ public class SportEntity {
 	private String wsId;
 
 	@JsonProperty("marketTypeEntities")
-	private List<MarketTypeEntity> marketTypeEntities = null;
+	private List<MarketType> marketTypeEntities = null;
 
 	@JsonProperty("sportName")
 	public String getSportName() {
@@ -61,12 +61,12 @@ public class SportEntity {
 	}
 
 	@JsonProperty("marketTypeEntities")
-	public List<MarketTypeEntity> getMarketTypeEntities() {
+	public List<MarketType> getMarketTypeEntities() {
 		return marketTypeEntities;
 	}
 
 	@JsonProperty("marketTypeEntities")
-	public void setMarketTypeEntities(List<MarketTypeEntity> marketTypeEntities) {
+	public void setMarketTypeEntities(List<MarketType> marketTypeEntities) {
 		this.marketTypeEntities = marketTypeEntities;
 	}
 }

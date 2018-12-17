@@ -22,7 +22,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "market_states")
-public class MarketStateEntity extends BaseEntity {
+public class MarketState extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
@@ -56,7 +56,7 @@ public class MarketStateEntity extends BaseEntity {
 	@JoinColumn(name = "match_state_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
-	private MatchStateEntity matchState;
+	private MatchState matchState;
 
 	@JsonProperty("id")
 	public Long getId() {
@@ -128,11 +128,11 @@ public class MarketStateEntity extends BaseEntity {
 		this.odd = odd;
 	}
 
-	public MatchStateEntity getMatchState() {
+	public MatchState getMatchState() {
 		return matchState;
 	}
 
-	public void setMatchState(MatchStateEntity matchState) {
+	public void setMatchState(MatchState matchState) {
 		this.matchState = matchState;
 	}
 
@@ -140,7 +140,7 @@ public class MarketStateEntity extends BaseEntity {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		MarketStateEntity that = (MarketStateEntity) o;
+		MarketState that = (MarketState) o;
 		return Objects.equals(fixtureId, that.fixtureId) &&
 				Objects.equals(betId, that.betId) &&
 				Objects.equals(suspended, that.suspended) &&

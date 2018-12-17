@@ -18,7 +18,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "matches")
-public class MatchEntity extends BaseEntity {
+public class Match extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
@@ -43,7 +43,7 @@ public class MatchEntity extends BaseEntity {
 	@JsonInclude()
 	@Transient
 	@JsonProperty("matchState")
-	private MatchStateEntity matchState = null;
+	private MatchState matchState = null;
 
 	public Long getId() {
 		return id;
@@ -94,12 +94,12 @@ public class MatchEntity extends BaseEntity {
 	}
 
 	@JsonProperty("matchState")
-	public MatchStateEntity getMatchState() {
+	public MatchState getMatchState() {
 		return matchState;
 	}
 
 	@JsonProperty("matchState")
-	public void setMatchState(MatchStateEntity matchState) {
+	public void setMatchState(MatchState matchState) {
 		this.matchState = matchState;
 	}
 
@@ -107,7 +107,7 @@ public class MatchEntity extends BaseEntity {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		MatchEntity that = (MatchEntity) o;
+		Match that = (Match) o;
 		return Objects.equals(bId, that.bId);
 	}
 

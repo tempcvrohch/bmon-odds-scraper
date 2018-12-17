@@ -21,7 +21,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "matches_states")
-public class MatchStateEntity extends BaseEntity {
+public class MatchState extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
@@ -42,13 +42,13 @@ public class MatchStateEntity extends BaseEntity {
 	@JsonInclude()
 	@Transient
 	@JsonProperty("marketStates")
-	private List<MarketStateEntity> marketStates = null;
+	private List<MarketState> marketStates = null;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "match_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
-	private MatchEntity matchEntity;
+	private Match match;
 
 	@JsonProperty("id")
 	public Long getId() {
@@ -91,28 +91,28 @@ public class MatchStateEntity extends BaseEntity {
 	}
 
 	@JsonProperty("marketStates")
-	public List<MarketStateEntity> getMarketStates() {
+	public List<MarketState> getMarketStates() {
 		return marketStates;
 	}
 
 	@JsonProperty("marketStates")
-	public void setMarketStates(List<MarketStateEntity> marketStates) {
+	public void setMarketStates(List<MarketState> marketStates) {
 		this.marketStates = marketStates;
 	}
 
-	public MatchEntity getMatchEntity() {
-		return matchEntity;
+	public Match getMatch() {
+		return match;
 	}
 
-	public void setMatchEntity(MatchEntity matchEntity) {
-		this.matchEntity = matchEntity;
+	public void setMatch(Match match) {
+		this.match = match;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		MatchStateEntity that = (MatchStateEntity) o;
+		MatchState that = (MatchState) o;
 		return Objects.equals(setScore, that.setScore) &&
 				Objects.equals(pointScore, that.pointScore) &&
 				Objects.equals(servingIndex, that.servingIndex);

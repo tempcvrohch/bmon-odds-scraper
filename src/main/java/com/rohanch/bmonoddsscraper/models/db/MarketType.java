@@ -12,7 +12,7 @@ import javax.persistence.Id;
 		"id",
 		"name"
 })
-public class MarketTypeEntity {
+public class MarketType {
 	@Id
 	@JsonProperty("id")
 	private String id;

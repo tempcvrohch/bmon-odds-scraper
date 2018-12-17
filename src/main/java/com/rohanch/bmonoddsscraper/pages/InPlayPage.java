@@ -1,7 +1,7 @@
 package com.rohanch.bmonoddsscraper.pages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rohanch.bmonoddsscraper.models.db.MatchEntity;
+import com.rohanch.bmonoddsscraper.models.db.Match;
 import com.rohanch.bmonoddsscraper.utils.Inject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -15,7 +15,7 @@ public class InPlayPage {
 		sportSelectElement.click();
 	}
 
-	public static MatchEntity[] ScrapeLiveGamesData(WebDriver webDriver, String sportName, String marketName) throws Exception {
+	public static Match[] ScrapeLiveGamesData(WebDriver webDriver, String sportName, String marketName) throws Exception {
 		if (!hasAvailableMatchesForCurrentSportName(webDriver)) {
 			throw new Exception(String.format("No lives games currently available for: %s\n", sportName));
 		}
@@ -28,7 +28,7 @@ public class InPlayPage {
 		}
 
 		ObjectMapper mapper = new ObjectMapper();
-		return mapper.convertValue(res, MatchEntity[].class);
+		return mapper.convertValue(res, Match[].class);
 	}
 
 	private static boolean hasAvailableMatchesForCurrentSportName(WebDriver webDriver) {

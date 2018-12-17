@@ -1,6 +1,6 @@
 package com.rohanch.bmonoddsscraper.services;
 
-import com.rohanch.bmonoddsscraper.models.db.MatchEntity;
+import com.rohanch.bmonoddsscraper.models.db.Match;
 import com.rohanch.bmonoddsscraper.repositories.MarketStateRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchStateRepository;
@@ -24,13 +24,13 @@ public class LiveMatchesService {
 
 	@Autowired
 	private MarketStateRepository marketStateRepository;
-	private ArrayList<MatchEntity> persistedMatchEntities = new ArrayList<>();
+	private ArrayList<Match> persistedMatchEntities = new ArrayList<>();
 
-	public ArrayList<MatchEntity> getPersistedMatchEntities() {
+	public ArrayList<Match> getPersistedMatchEntities() {
 		return persistedMatchEntities;
 	}
 
-	public void setPersistedMatchEntities(ArrayList<MatchEntity> persistedMatchEntities) {
+	public void setPersistedMatchEntities(ArrayList<Match> persistedMatchEntities) {
 		this.persistedMatchEntities = persistedMatchEntities;
 	}
 
@@ -41,7 +41,7 @@ public class LiveMatchesService {
 	 * @param updatedMatches The currently scraped list of matches.
 	 */
 	@Transactional
-	public void UpdateMatches(MatchEntity[] updatedMatches) {
+	public void UpdateMatches(Match[] updatedMatches) {
 		var created = 0;
 		var updated = 0;
 
@@ -83,8 +83,8 @@ public class LiveMatchesService {
 	 * @param match to be updated.
 	 * @return the updated match with referenced parents.
 	 */
-	private MatchEntity prepareMatchEntityForDB(@NotNull MatchEntity match) {
-		match.getMatchState().setMatchEntity(match); //TODO: dicuss entity structure with Deniz
+	private Match prepareMatchEntityForDB(@NotNull Match match) {
+		match.getMatchState().setMatch(match);
 		for (var marketState : match.getMatchState().getMarketStates()) {
 			marketState.setMatchState(match.getMatchState());
 		}
@@ -92,8 +92,8 @@ public class LiveMatchesService {
 		return match;
 	}
 
-	private void persistNewMatch(@NotNull MatchEntity newMatch) {
-		var insertedMatch = matchRepository.save(newMatch); //TODO: why aren't the original objects updated?
+	private void persistNewMatch(@NotNull Match newMatch) {
+		var insertedMatch = matchRepository.save(newMatch);
 		insertedMatch.setMatchState(matchStateRepository.save(insertedMatch.getMatchState()));
 		insertedMatch.getMatchState().setMarketStates(marketStateRepository.saveAll(insertedMatch.getMatchState().getMarketStates()));
 		persistedMatchEntities.add(insertedMatch);
@@ -110,7 +110,7 @@ public class LiveMatchesService {
 	 * @param persistedMatch current persisted match
 	 * @param updatedMatch   the updated match
 	 */
-	private void updateMatchNestedElements(@NotNull MatchEntity persistedMatch, @NotNull MatchEntity updatedMatch) {
+	private void updateMatchNestedElements(@NotNull Match persistedMatch, @NotNull Match updatedMatch) {
 		if (!persistedMatch.getMatchState().equals(updatedMatch.getMatchState())) {
 			persistedMatch.setMatchState(updatedMatch.getMatchState());
 			matchStateRepository.saveAndFlush(persistedMatch.getMatchState());
@@ -118,7 +118,7 @@ public class LiveMatchesService {
 
 		//TODO: should these be in their own functions?
 		if (!persistedMatch.getMatchState().getMarketStates().equals(updatedMatch.getMatchState().getMarketStates())) {
-			persistedMatch.getMatchState().setMarketStates(updatedMatch.getMatchState().getMarketStates()); //TODO: looks ugly
+			persistedMatch.getMatchState().setMarketStates(updatedMatch.getMatchState().getMarketStates());
 			marketStateRepository.saveAll(persistedMatch.getMatchState().getMarketStates());
 		}
 	}
