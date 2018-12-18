@@ -37,7 +37,7 @@ public class ScrapeTimerService {
 				DoScrape(sportName, marketName);
 			}
 		};
-		Timer timer = new Timer("Timer");
+		Timer timer = new Timer(String.format("ScrapeTimer-%s", sportName));
 
 		long period = 5000L;
 		timer.scheduleAtFixedRate(task, 0L, period);
@@ -68,8 +68,6 @@ public class ScrapeTimerService {
 			var matches = inPlay.ScrapeLiveGamesData(webDriver, sportName, marketName);
 			if (matches.length > 0) {
 				liveMatchesService.UpdateMatches(matches);
-			} else {
-				logger.debug("No matches persisted");
 			}
 		} catch (Exception e) {
 			logger.error("Stopping scrape timer \"{}\" on market \"{}\"", sportName, marketName, e);

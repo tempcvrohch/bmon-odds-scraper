@@ -53,7 +53,7 @@ public class LiveMatchesService {
 			loadInitialLiveMatchesFromDB();
 		}
 
-		logger.debug("Upserting {} matches.", updatedMatches.length);
+		logger.debug("Checking {} matches.", updatedMatches.length);
 
 		for (var updatedMatch : updatedMatches) {
 			var optMatch = persistedMatchEntities
@@ -62,15 +62,19 @@ public class LiveMatchesService {
 					.findFirst();
 
 			if (optMatch.isPresent()) {
-				updateMatchNestedElements(optMatch.get(), updatedMatch);
-				updated++;
+				var changed = updateMatchNestedElements(optMatch.get(), updatedMatch);
+				if (changed) {
+					updated++;
+				}
 			} else {
 				persistNewMatch(updatedMatch);
 				created++;
 			}
 		}
 
-		logger.debug("{} matches created and {} matches updated.", created, updated);
+		if (created > 0 || updated > 0) {
+			logger.debug("{} matches created and {} matches updated.", created, updated);
+		}
 	}
 
 	/**
@@ -113,22 +117,26 @@ public class LiveMatchesService {
 	 * Sets the new match state as the current match state(eg a point score of 0-0 -> 0-1).
 	 * <p>
 	 * Both params should refer to the same match (eg persistedMatch.name = "PSV vs Ajax" and updatedMatch.name = "PSV vs Ajax").
-	 *
-	 * @param persistedMatch current persisted match
+	 *  @param persistedMatch current persisted match
 	 * @param updatedMatch   the updated match
 	 */
-	private void updateMatchNestedElements(@NotNull Match persistedMatch, @NotNull Match updatedMatch) { //TODO: this whole thing feels confusing
+	private boolean updateMatchNestedElements(@NotNull Match persistedMatch, @NotNull Match updatedMatch) { //TODO: this whole thing feels confusing
+		var changed = false;
 		var preparedMatch = prepareMatchEntityForDB(updatedMatch, persistedMatch);
 
 		if (!persistedMatch.getMatchState().equals(preparedMatch.getMatchState())) {
 			persistedMatch.setMatchState(preparedMatch.getMatchState());
 			matchStateRepository.saveAndFlush(persistedMatch.getMatchState());
+			changed = true;
 		}
 
 		//TODO: should these be in their own functions?
 		if (!persistedMatch.getMatchState().getMarketStates().equals(preparedMatch.getMatchState().getMarketStates())) {
 			persistedMatch.getMatchState().setMarketStates(preparedMatch.getMatchState().getMarketStates());
 			marketStateRepository.saveAll(persistedMatch.getMatchState().getMarketStates());
+			changed = true;
 		}
+
+		return changed;
 	}
 }

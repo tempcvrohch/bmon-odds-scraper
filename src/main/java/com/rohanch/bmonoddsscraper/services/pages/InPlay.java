@@ -5,6 +5,7 @@ import com.rohanch.bmonoddsscraper.models.db.Match;
 import com.rohanch.bmonoddsscraper.services.helpers.Inject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,11 @@ public class InPlay {
 	private Inject inject;
 
 	public boolean IsLiveSportAvailable(WebDriver webDriver, String sportName) {
-		return webDriver.findElements(By.xpath(String.format("//%s[text()=\"%s\"]", "div", sportName))).isEmpty();
+		try {
+			return webDriver.findElements(By.xpath(String.format("//%s[text()=\"%s\"]", "div", sportName))).size() > 0;
+		} catch (StaleElementReferenceException e) {
+			return false;
+		}
 	}
 
 	public boolean HasLiveSportSelected(WebDriver webDriver, String sportName) {
@@ -45,7 +50,7 @@ public class InPlay {
 
 		var res = ((JavascriptExecutor) webDriver).executeScript(expression);
 		if (res == null) {
-			logger.info("No markets available for games in \"{}\"/\"{}\"\n", sportName, marketName);
+			logger.info("No markets available for games in \"{}\"/\"{}\"", sportName, marketName);
 			return new Match[]{};
 			//throw new InPlayException(String.format("No markets available for games in \"%s\"/\"%s\"\n", sportName, marketName));
 		}

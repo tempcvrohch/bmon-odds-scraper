@@ -1,6 +1,5 @@
 package com.rohanch.bmonoddsscraper.services;
 
-import com.rohanch.bmonoddsscraper.services.pages.InPlay;
 import com.rohanch.bmonoddsscraper.services.pages.Landing;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -17,9 +16,6 @@ import java.util.concurrent.TimeUnit;
 public class WebDriverService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private HashMap<String, WebDriver> sportWebDrivers = new HashMap<>();
-
-	@Autowired
-	private InPlay inPlay;
 
 	@Autowired
 	private Landing landing;
@@ -43,9 +39,6 @@ public class WebDriverService {
 		logger.debug("Navigated to bet365");
 
 		landing.ChooseLanguageAndNavigate(webDriver, "English", "https://bet365.com/#/IP/");
-		logger.debug("Clicked language");
-
-		inPlay.OpenSportOnName(webDriver, sportName);
 		logger.debug("Webdriver ready");
 
 		sportWebDrivers.put(sportName, webDriver);
