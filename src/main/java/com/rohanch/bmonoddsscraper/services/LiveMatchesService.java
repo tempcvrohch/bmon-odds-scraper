@@ -45,7 +45,7 @@ public class LiveMatchesService {
 	 * @param updatedMatches The currently scraped list of matches.
 	 */
 	@Transactional
-	public void UpdateMatches(Match[] updatedMatches) {
+	void UpdateMatches(Match[] updatedMatches) {
 		var created = 0;
 		var updated = 0;
 
@@ -53,23 +53,24 @@ public class LiveMatchesService {
 			loadInitialLiveMatchesFromDB();
 		}
 
+		logger.debug("Upserting {} matches.", updatedMatches.length);
+
 		for (var updatedMatch : updatedMatches) {
-			var preparedMatch = prepareMatchEntityForDB(updatedMatch); //TODO: updatedMatch = prepareMatchEntityForDB(updatedMatch); ?
 			var optMatch = persistedMatchEntities
 					.stream()
-					.filter(fMatch -> fMatch.equals(preparedMatch))
+					.filter(fMatch -> fMatch.equals(updatedMatch))
 					.findFirst();
 
 			if (optMatch.isPresent()) {
-				updateMatchNestedElements(optMatch.get(), preparedMatch);
+				updateMatchNestedElements(optMatch.get(), updatedMatch);
 				updated++;
 			} else {
-				persistNewMatch(preparedMatch);
+				persistNewMatch(updatedMatch);
 				created++;
 			}
 		}
 
-		logger.debug("UpdateMatches: {} matches created and {} matches updated.\n", created, updated);
+		logger.debug("{} matches created and {} matches updated.", created, updated);
 	}
 
 	/**
@@ -87,17 +88,19 @@ public class LiveMatchesService {
 	 * @param match to be updated.
 	 * @return the updated match with referenced parents.
 	 */
-	private Match prepareMatchEntityForDB(@NotNull Match match) {
-		match.getMatchState().setMatch(match);
+	private Match prepareMatchEntityForDB(@NotNull Match match, @NotNull Match targetMatch) {
+		match.getMatchState().setMatch(targetMatch);
 		for (var marketState : match.getMatchState().getMarketStates()) {
-			marketState.setMatchState(match.getMatchState());
+			marketState.setMatchState(targetMatch.getMatchState());
 		}
 
 		return match;
 	}
 
 	private void persistNewMatch(@NotNull Match newMatch) {
-		var insertedMatch = matchRepository.save(newMatch);
+		var preparedMatch = prepareMatchEntityForDB(newMatch, newMatch); //TODO: ugly
+
+		var insertedMatch = matchRepository.save(preparedMatch);
 		insertedMatch.setMatchState(matchStateRepository.save(insertedMatch.getMatchState()));
 		insertedMatch.getMatchState().setMarketStates(marketStateRepository.saveAll(insertedMatch.getMatchState().getMarketStates()));
 		persistedMatchEntities.add(insertedMatch);
@@ -114,15 +117,17 @@ public class LiveMatchesService {
 	 * @param persistedMatch current persisted match
 	 * @param updatedMatch   the updated match
 	 */
-	private void updateMatchNestedElements(@NotNull Match persistedMatch, @NotNull Match updatedMatch) {
-		if (!persistedMatch.getMatchState().equals(updatedMatch.getMatchState())) {
-			persistedMatch.setMatchState(updatedMatch.getMatchState());
+	private void updateMatchNestedElements(@NotNull Match persistedMatch, @NotNull Match updatedMatch) { //TODO: this whole thing feels confusing
+		var preparedMatch = prepareMatchEntityForDB(updatedMatch, persistedMatch);
+
+		if (!persistedMatch.getMatchState().equals(preparedMatch.getMatchState())) {
+			persistedMatch.setMatchState(preparedMatch.getMatchState());
 			matchStateRepository.saveAndFlush(persistedMatch.getMatchState());
 		}
 
 		//TODO: should these be in their own functions?
-		if (!persistedMatch.getMatchState().getMarketStates().equals(updatedMatch.getMatchState().getMarketStates())) {
-			persistedMatch.getMatchState().setMarketStates(updatedMatch.getMatchState().getMarketStates());
+		if (!persistedMatch.getMatchState().getMarketStates().equals(preparedMatch.getMatchState().getMarketStates())) {
+			persistedMatch.getMatchState().setMarketStates(preparedMatch.getMatchState().getMarketStates());
 			marketStateRepository.saveAll(persistedMatch.getMatchState().getMarketStates());
 		}
 	}

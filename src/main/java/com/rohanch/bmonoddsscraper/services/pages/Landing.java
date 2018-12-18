@@ -17,7 +17,7 @@ public class Landing {
 		var optLanguage = languages.stream().filter(e -> e.getText().equals(lang)).findFirst();
 		var langElement = optLanguage.orElseThrow(LanguageNotAvailableException::new);
 
-		logger.debug("Selecting language: \"{}\"\n", langElement.getText());
+		logger.debug("Selecting language: \"{}\"", langElement.getText());
 		langElement.click();
 
 		webDriver.findElement(By.className("lpgb")); //await page refresh

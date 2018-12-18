@@ -30,7 +30,7 @@ public class ScrapeService {
 			throw new ScrapeTimerException(String.format("Timer for \"%s\" is already running.\n", marketName));
 		}
 
-		logger.debug("Starting timer for \"{}\"!\n", marketName);
+		logger.debug("Starting timer for \"{}\"!", marketName);
 
 		TimerTask task = new TimerTask() {
 			public void run() {
@@ -49,14 +49,14 @@ public class ScrapeService {
 			throw new ScrapeTimerException(String.format("Timer for \"%s\" is not running.\n", marketName));
 		}
 
-		logger.debug("Stopping timer for \"{}\"!\n", marketName);
+		logger.debug("Stopping timer for \"{}\"!", marketName);
 
 		scrapeTimers.get(marketName).cancel();
 		scrapeTimers.remove(marketName);
 	}
 
 	private void DoScrape(String sportName, String marketName) {
-		logger.debug("Scraping \"{}\" on market \"{}\"\n", sportName, marketName);
+		logger.debug("Scraping \"{}\" on market \"{}\"", sportName, marketName);
 
 		try {
 			var webDriver = webDriverService.GetActiveWebDriver(sportName);
@@ -68,7 +68,7 @@ public class ScrapeService {
 				logger.debug("No matches persisted");
 			}
 		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
+			logger.error(e.getMessage());
 
 			StopScraper(marketName);
 		}

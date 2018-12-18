@@ -33,7 +33,7 @@ public class WebDriverService {
 			throw new WebDriverException(String.format("Webdriver for \"%s\" is already running.\n", sportName));
 		}
 
-		logger.debug("Starting Chrome for \"{}\"\n", sportName);
+		logger.debug("Starting Chrome for \"{}\"", sportName);
 		System.setProperty("webdriver.chrome.driver", "bin\\chromedriver.exe");
 		WebDriver webDriver = new ChromeDriver();
 		webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -51,7 +51,7 @@ public class WebDriverService {
 	}
 
 	public void StopOnSportname(String sportName) {
-		logger.debug("Stopping Chrome for \"{}\"!\n", sportName);
+		logger.debug("Stopping Chrome for \"{}\"!", sportName);
 		GetActiveWebDriver(sportName).close();
 		sportWebDrivers.remove(sportName);
 	}
