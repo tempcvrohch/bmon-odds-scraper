@@ -27,14 +27,18 @@ public class InPlay {
 
 	public Match[] ScrapeLiveGamesData(WebDriver webDriver, String sportName, String marketName) {
 		if (!hasAvailableMatchesForCurrentSportName(webDriver)) {
-			throw new InPlayException(String.format("No Live games available for \"%s\"\n", sportName));
+			logger.info("No live games available for \"{}\"", sportName);
+			return new Match[]{};
+			//throw new InPlayException(String.format("No Live games available for \"%s\"\n", sportName));
 		}
 
 		var expression = inject.ConstructJSExpressionWithFile(String.format("return ReadOddDataOnBasicMarket(\"%s\",\"%s\");", sportName, marketName), "assets\\inject\\inplay-matches-helper.js");
 
 		var res = ((JavascriptExecutor) webDriver).executeScript(expression);
 		if (res == null) {
-			throw new InPlayException(String.format("No markets available for games in \"%s\"/\"%s\"\n", sportName, marketName));
+			logger.info("No markets available for games in \"{}\"/\"{}\"\n", sportName, marketName);
+			return new Match[]{};
+			//throw new InPlayException(String.format("No markets available for games in \"%s\"/\"%s\"\n", sportName, marketName));
 		}
 
 		ObjectMapper mapper = new ObjectMapper();
