@@ -11,7 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @Service
-public class ScrapeService {
+public class ScrapeTimerService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -61,6 +61,10 @@ public class ScrapeService {
 		try {
 			var webDriver = webDriverService.GetActiveWebDriver(sportName);
 
+			if (!inPlay.HasLiveSportSelected(webDriver, sportName) && inPlay.IsLiveSportAvailable(webDriver, sportName)) {
+				inPlay.OpenSportOnName(webDriver, sportName);
+			}
+
 			var matches = inPlay.ScrapeLiveGamesData(webDriver, sportName, marketName);
 			if (matches.length > 0) {
 				liveMatchesService.UpdateMatches(matches);
@@ -68,7 +72,7 @@ public class ScrapeService {
 				logger.debug("No matches persisted");
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("Stopping scrape timer \"{}\" on market \"{}\"", sportName, marketName, e);
 
 			StopScraper(marketName);
 		}

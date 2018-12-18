@@ -18,6 +18,15 @@ public class InPlay {
 	@Autowired
 	private Inject inject;
 
+	public boolean IsLiveSportAvailable(WebDriver webDriver, String sportName) {
+		return webDriver.findElements(By.xpath(String.format("//%s[text()=\"%s\"]", "div", sportName))).isEmpty();
+	}
+
+	public boolean HasLiveSportSelected(WebDriver webDriver, String sportName) {
+		var sportSelectElement = webDriver.findElement(By.className("ipo-ClassificationBarButtonBase_Selected"));
+		return sportSelectElement.getText().contains(sportName);
+	}
+
 	public void OpenSportOnName(WebDriver webDriver, String sportName) {
 		var sportSelectElement = webDriver.findElement(By.xpath(String.format("//%s[text()=\"%s\"]", "div", sportName)));
 

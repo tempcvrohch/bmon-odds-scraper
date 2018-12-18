@@ -44,6 +44,7 @@ public class WebDriverService {
 
 		landing.ChooseLanguageAndNavigate(webDriver, "English", "https://bet365.com/#/IP/");
 		logger.debug("Clicked language");
+
 		inPlay.OpenSportOnName(webDriver, sportName);
 		logger.debug("Webdriver ready");
 
