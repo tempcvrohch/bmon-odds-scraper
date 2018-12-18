@@ -6,18 +6,22 @@ import com.rohanch.bmonoddsscraper.services.helpers.Inject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class InPlay {
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private Inject inject;
 
 	public void OpenSportOnName(WebDriver webDriver, String sportName) {
 		var sportSelectElement = webDriver.findElement(By.xpath(String.format("//%s[text()=\"%s\"]", "div", sportName)));
 
-		System.out.printf("Clicking sport: \"%s\" in InPlay page\n", sportName);
+		logger.debug("Clicking sport: \"{}\" in InPlay page\n", sportName);
 		sportSelectElement.click();
 	}
 

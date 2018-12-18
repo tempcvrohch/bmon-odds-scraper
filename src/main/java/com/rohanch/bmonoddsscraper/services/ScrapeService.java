@@ -1,6 +1,8 @@
 package com.rohanch.bmonoddsscraper.services;
 
 import com.rohanch.bmonoddsscraper.services.pages.InPlay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,8 @@ import java.util.TimerTask;
 
 @Service
 public class ScrapeService {
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private WebDriverService webDriverService;
 
@@ -26,7 +30,7 @@ public class ScrapeService {
 			throw new ScrapeTimerException(String.format("Timer for \"%s\" is already running.\n", marketName));
 		}
 
-		System.out.printf("Starting timer for \"%s\"!\n", marketName);
+		logger.debug("Starting timer for \"{}\"!\n", marketName);
 
 		TimerTask task = new TimerTask() {
 			public void run() {
@@ -45,14 +49,14 @@ public class ScrapeService {
 			throw new ScrapeTimerException(String.format("Timer for \"%s\" is not running.\n", marketName));
 		}
 
-		System.out.printf("Stopping timer for \"%s\"!\n", marketName);
+		logger.debug("Stopping timer for \"{}\"!\n", marketName);
 
 		scrapeTimers.get(marketName).cancel();
 		scrapeTimers.remove(marketName);
 	}
 
 	private void DoScrape(String sportName, String marketName) {
-		System.out.printf("Scraping %s on market \"%s\"\n", sportName, marketName);
+		logger.debug("Scraping \"{}\" on market \"{}\"\n", sportName, marketName);
 
 		try {
 			var webDriver = webDriverService.GetActiveWebDriver(sportName);
@@ -61,10 +65,10 @@ public class ScrapeService {
 			if (matches.length > 0) {
 				liveMatchesService.UpdateMatches(matches);
 			} else {
-				System.out.println("No matches persisted");
+				logger.debug("No matches persisted");
 			}
 		} catch (Exception e) {
-			e.printStackTrace(System.out);
+			logger.error(e.getLocalizedMessage());
 
 			StopScraper(marketName);
 		}

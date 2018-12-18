@@ -5,6 +5,8 @@ import com.rohanch.bmonoddsscraper.repositories.MarketStateRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchStateRepository;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,8 @@ import java.util.GregorianCalendar;
 
 @Service
 public class LiveMatchesService {
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private MatchRepository matchRepository;
 
@@ -65,7 +69,7 @@ public class LiveMatchesService {
 			}
 		}
 
-		System.out.printf("UpdateMatches: %d matches created and %d matches updated.\n", created, updated);
+		logger.debug("UpdateMatches: {} matches created and {} matches updated.\n", created, updated);
 	}
 
 	/**
