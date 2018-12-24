@@ -41,7 +41,7 @@ public class Match extends BaseEntity {
 	private String leagueName;
 
 	@JsonInclude()
-	@Transient
+	@OneToOne() //, mappedBy = "match"
 	@JsonProperty("matchState")
 	private MatchState matchState = null;
 

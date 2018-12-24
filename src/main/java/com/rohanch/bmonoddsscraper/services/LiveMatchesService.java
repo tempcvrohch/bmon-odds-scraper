@@ -4,7 +4,6 @@ import com.rohanch.bmonoddsscraper.models.db.Match;
 import com.rohanch.bmonoddsscraper.repositories.MarketStateRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchStateRepository;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 @Service
+@Transactional
 public class LiveMatchesService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -44,7 +44,7 @@ public class LiveMatchesService {
 	 *
 	 * @param updatedMatches The currently scraped list of matches.
 	 */
-	@Transactional
+//	@Transactional
 	void UpdateMatches(Match[] updatedMatches) {
 		var created = 0;
 		var updated = 0;
@@ -92,7 +92,7 @@ public class LiveMatchesService {
 	 * @param match to be updated.
 	 * @return the updated match with referenced parents.
 	 */
-	private Match prepareMatchEntityForDB(@NotNull Match match, @NotNull Match targetMatch) {
+	private Match setParentReferencesOnChildren(Match match, Match targetMatch) {
 		match.getMatchState().setMatch(targetMatch);
 		for (var marketState : match.getMatchState().getMarketStates()) {
 			marketState.setMatchState(targetMatch.getMatchState());
@@ -101,12 +101,22 @@ public class LiveMatchesService {
 		return match;
 	}
 
-	private void persistNewMatch(@NotNull Match newMatch) {
-		var preparedMatch = prepareMatchEntityForDB(newMatch, newMatch); //TODO: ugly
+	private void persistNewMatch(Match newMatch) {
+		var preparedMatch = setParentReferencesOnChildren(newMatch, newMatch);
+
+		//the match object needs a db reference to the latest matchState(which isn't set yet) so unset it first
+		var transientMatchState = preparedMatch.getMatchState();
+		preparedMatch.setMatchState(null);
 
 		var insertedMatch = matchRepository.save(preparedMatch);
-		insertedMatch.setMatchState(matchStateRepository.save(insertedMatch.getMatchState()));
-		insertedMatch.getMatchState().setMarketStates(marketStateRepository.saveAll(insertedMatch.getMatchState().getMarketStates()));
+		transientMatchState = matchStateRepository.save(transientMatchState);
+
+		//the match state has been persisted and can now be saved to the match
+		insertedMatch.setMatchState(transientMatchState);
+		insertedMatch = matchRepository.save(insertedMatch);
+
+		var insertedMarketStates = marketStateRepository.saveAll(newMatch.getMatchState().getMarketStates());
+		insertedMatch.getMatchState().setMarketStates(insertedMarketStates);
 		persistedMatchEntities.add(insertedMatch);
 	}
 
@@ -120,13 +130,16 @@ public class LiveMatchesService {
 	 *  @param persistedMatch current persisted match
 	 * @param updatedMatch   the updated match
 	 */
-	private boolean updateMatchNestedElements(@NotNull Match persistedMatch, @NotNull Match updatedMatch) { //TODO: this whole thing feels confusing
+	private boolean updateMatchNestedElements(Match persistedMatch, Match updatedMatch) { //TODO: this whole thing feels confusing
 		var changed = false;
-		var preparedMatch = prepareMatchEntityForDB(updatedMatch, persistedMatch);
+		var preparedMatch = setParentReferencesOnChildren(updatedMatch, persistedMatch);
 
 		if (!persistedMatch.getMatchState().equals(preparedMatch.getMatchState())) {
 			persistedMatch.setMatchState(preparedMatch.getMatchState());
-			matchStateRepository.saveAndFlush(persistedMatch.getMatchState());
+			var insertedMatchState = matchStateRepository.save(persistedMatch.getMatchState()); //save the new match state
+
+			persistedMatch.setMatchState(insertedMatchState);
+			matchRepository.save(persistedMatch); //save the reference to the new match state to the match object
 			changed = true;
 		}
 
