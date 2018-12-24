@@ -97,7 +97,8 @@ function getTeamSeparator(sportName){
 		'Tennis': ' v ',
 		'Table Tennis': ' v ',
 		'Soccer': ' vs ',
-		'Basketball': ' vs '
+		'Basketball': ' vs ',
+		'Volleyball': ' v '
 	}
 
 	return knowSeparators[sportName]
@@ -116,9 +117,9 @@ function createMarketStateObject(playerName, data, market) {
 
 function createMatchStateObject(sportName, data, marketStates) {
     return {
-        pointScore: data.XP,
+    	setScore: data.XP, //should be the other way around I think
+        pointScore: data.SS,
         servingIndex: data.PI,
-        setScore: data.SS,
         marketStates
     }
 }

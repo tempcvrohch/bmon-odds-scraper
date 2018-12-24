@@ -55,7 +55,7 @@ public class ScrapeTimerService {
 		scrapeTimers.remove(marketName);
 	}
 
-	private void DoScrape(String sportName, String marketName) {
+	public void DoScrape(String sportName, String marketName) {
 		logger.debug("Scraping \"{}\" on market \"{}\"", sportName, marketName);
 
 		try {
