@@ -13,4 +13,7 @@ import java.util.List;
 public interface MatchRepository extends JpaRepository<Match, Long> {
 	@Query(value = "SELECT * FROM matches m WHERE m.created_at >= :timestamp", nativeQuery = true)
 	List<Match> findAfterTimestamp(@Param("timestamp") Timestamp timestamp);
+
+	@Query(value = "SELECT * FROM matches m WHERE m.created_at >= :startTimestamp AND m.created_at <= :endTimestamp", nativeQuery = true)
+	List<Match> findBetweenTimestamps(@Param("startTimestamp") Timestamp startTimestamp, @Param("endTimestamp") Timestamp endTimestamp);
 }
