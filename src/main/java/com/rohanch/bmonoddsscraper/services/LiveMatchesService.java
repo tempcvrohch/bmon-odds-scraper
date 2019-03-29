@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 @Service
 @Transactional
@@ -30,12 +28,10 @@ public class LiveMatchesService {
 	private MarketStateRepository marketStateRepository;
 	private ArrayList<Match> persistedMatchEntities = new ArrayList<>();
 
-	public ArrayList<Match> getPersistedMatchEntities() {
-		return persistedMatchEntities;
-	}
+	private List<Match> liveMatchEntities = new ArrayList<>();
 
-	public void setPersistedMatchEntities(ArrayList<Match> persistedMatchEntities) {
-		this.persistedMatchEntities = persistedMatchEntities;
+	public List<Match> getLiveMatchEntities() {
+		return liveMatchEntities;
 	}
 
 	/**
@@ -46,11 +42,12 @@ public class LiveMatchesService {
 	 */
 //	@Transactional
 	void UpdateMatches(Match[] updatedMatches) {
+		liveMatchEntities = Arrays.asList(updatedMatches);
 		var created = 0;
 		var updated = 0;
 
-		if (persistedMatchEntities.size() == 0) {
-			loadInitialLiveMatchesFromDB();
+		if (persistedMatchEntities.isEmpty()) {
+			persistedMatchEntities = getRecentMatchesFromDB();
 		}
 
 		logger.debug("Checking {} matches.", updatedMatches.length);
@@ -80,10 +77,10 @@ public class LiveMatchesService {
 	/**
 	 * In case of an application restart the persisted matches variable should be consistent with what is in the database.
 	 */
-	private void loadInitialLiveMatchesFromDB() {
+	private ArrayList<Match> getRecentMatchesFromDB() {
 		var calendar = new GregorianCalendar();
 		calendar.add(Calendar.DATE, -1);
-		persistedMatchEntities = new ArrayList<>(matchRepository.findAfterTimestamp(new Timestamp(calendar.getTimeInMillis())));
+		return new ArrayList<>(matchRepository.findAfterTimestamp(new Timestamp(calendar.getTimeInMillis())));
 	}
 
 	/**
