@@ -17,7 +17,7 @@ public class BasicControllerAdvice {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ScrapeTimerService.ScrapeTimerException.class, WebDriverService.WebDriverException.class})
+	@ExceptionHandler({ScrapeTimerService.ScrapeTimerException.class, WebDriverService.WebDriverException.class, MatchController.MatchNotFound.class})
 	public void handleBadRequest(Exception exception) {
 		logger.info(exception.getLocalizedMessage());
 	}

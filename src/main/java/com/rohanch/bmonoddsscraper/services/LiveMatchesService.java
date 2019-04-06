@@ -79,7 +79,7 @@ public class LiveMatchesService {
 	 */
 	private ArrayList<Match> getRecentMatchesFromDB() {
 		var calendar = new GregorianCalendar();
-		calendar.add(Calendar.DATE, -1);
+		calendar.add(Calendar.DATE, -2);
 		return new ArrayList<>(matchRepository.findAfterTimestamp(new Timestamp(calendar.getTimeInMillis())));
 	}
 

@@ -45,6 +45,11 @@ public class Match extends BaseEntity {
 	@JsonProperty("matchState")
 	private MatchState matchState = null;
 
+	@JsonInclude()
+	@Transient
+	@JsonProperty("matchStates")
+	private MatchState[] matchStates = null;
+
 	@JsonProperty("live")
 	@Transient
 	@JsonInclude()
@@ -106,6 +111,16 @@ public class Match extends BaseEntity {
 	@JsonProperty("matchState")
 	public void setMatchState(MatchState matchState) {
 		this.matchState = matchState;
+	}
+
+	@JsonProperty("matchStates")
+	public MatchState[] getMatchStates() {
+		return matchStates;
+	}
+
+	@JsonProperty("matchStates")
+	public void setMatchStates(MatchState[] matchStates) {
+		this.matchStates = matchStates;
 	}
 
 	@JsonProperty("live")
