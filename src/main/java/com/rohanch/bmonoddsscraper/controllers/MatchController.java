@@ -1,6 +1,8 @@
 package com.rohanch.bmonoddsscraper.controllers;
 
+import com.rohanch.bmonoddsscraper.models.db.MarketState;
 import com.rohanch.bmonoddsscraper.models.db.Match;
+import com.rohanch.bmonoddsscraper.repositories.MarketStateRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchStateRepository;
 import com.rohanch.bmonoddsscraper.services.LiveMatchesService;
@@ -26,6 +28,9 @@ public class MatchController {
 	private MatchStateRepository matchStateRepository;
 
 	@Autowired
+	private MarketStateRepository marketStateRepository;
+
+	@Autowired
 	private LiveMatchesService liveMatchesService;
 
 	@GetMapping("/matches")
@@ -47,6 +52,12 @@ public class MatchController {
 		match.setMatchStates(matchStateRepository.findAllByMatchId(id)); //TODO: jpa should probably handle the child entities
 
 		return match;
+	}
+
+	//TODO: place this in a new controller
+	@GetMapping("/match/{id}/market/latest")
+	public MarketState[] GetLatestMarketOnMatchId(@PathVariable("id") Long id) {
+		return marketStateRepository.findLatestMarketStatesOnMatchId(id);
 	}
 
 	@GetMapping("/matches/recent")
