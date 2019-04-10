@@ -1,6 +1,7 @@
 package com.rohanch.bmonoddsscraper.controllers;
 
 import com.rohanch.bmonoddsscraper.services.ScrapeTimerService;
+import com.rohanch.bmonoddsscraper.services.UserDetailService;
 import com.rohanch.bmonoddsscraper.services.WebDriverService;
 import com.rohanch.bmonoddsscraper.services.helpers.Inject;
 import com.rohanch.bmonoddsscraper.services.pages.InPlay;
@@ -17,7 +18,8 @@ public class BasicControllerAdvice {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ScrapeTimerService.ScrapeTimerException.class, WebDriverService.WebDriverException.class, MatchController.MatchNotFound.class})
+	@ExceptionHandler({ScrapeTimerService.ScrapeTimerException.class, WebDriverService.WebDriverException.class,
+			MatchController.MatchNotFound.class, UserDetailService.UsernameTakenException.class})
 	public void handleBadRequest(Exception exception) {
 		logger.info(exception.getLocalizedMessage());
 	}

@@ -140,8 +140,8 @@ public class LiveMatchesService {
 			changed = true;
 		}
 
-		//TODO: should these be in their own functions?
-		if (!persistedMatch.getMatchState().getMarketStates().equals(preparedMatch.getMatchState().getMarketStates())) {
+		if (persistedMatch.getMatchState().getMarketStates() == null ||
+				!persistedMatch.getMatchState().getMarketStates().equals(preparedMatch.getMatchState().getMarketStates())) {
 			persistedMatch.getMatchState().setMarketStates(preparedMatch.getMatchState().getMarketStates());
 			marketStateRepository.saveAll(persistedMatch.getMatchState().getMarketStates());
 			changed = true;
