@@ -1,5 +1,6 @@
 package com.rohanch.bmonoddsscraper.controllers;
 
+import com.rohanch.bmonoddsscraper.services.BetService;
 import com.rohanch.bmonoddsscraper.services.ScrapeTimerService;
 import com.rohanch.bmonoddsscraper.services.UserDetailService;
 import com.rohanch.bmonoddsscraper.services.WebDriverService;
@@ -19,7 +20,8 @@ public class BasicControllerAdvice {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ScrapeTimerService.ScrapeTimerException.class, WebDriverService.WebDriverException.class,
-			MatchController.MatchNotFound.class, UserDetailService.UsernameTakenException.class})
+			MatchController.MatchNotFound.class, UserDetailService.UsernameTakenException.class, BetService.BetAlreadyPlacedException.class,
+			BetService.InsufficientBalanceException.class, BetService.UnknownMarketStateOnBetException.class})
 	public void handleBadRequest(Exception exception) {
 		logger.info(exception.getLocalizedMessage());
 	}
@@ -31,8 +33,14 @@ public class BasicControllerAdvice {
 	}
 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler({InPlay.InPlayException.class, Inject.JSFileNotFoundException.class})
+	@ExceptionHandler({InPlay.InPlayException.class, Inject.JSFileNotFoundException.class, BetService.InvalidFractionalOddException.class})
 	public void handleServerError(Exception exception) {
+		logger.error(exception.getLocalizedMessage());
+	}
+
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ExceptionHandler({BetController.UnauthenticatedUserException.class})
+	public void handleUnautherizeddError(Exception exception) {
 		logger.error(exception.getLocalizedMessage());
 	}
 }
