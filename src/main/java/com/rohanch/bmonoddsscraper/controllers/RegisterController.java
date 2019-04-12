@@ -3,11 +3,13 @@ package com.rohanch.bmonoddsscraper.controllers;
 import com.rohanch.bmonoddsscraper.models.db.User;
 import com.rohanch.bmonoddsscraper.services.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = {"*"}, allowCredentials = "true")
 public class RegisterController {
 	@Autowired
 	private UserDetailService userDetailService;

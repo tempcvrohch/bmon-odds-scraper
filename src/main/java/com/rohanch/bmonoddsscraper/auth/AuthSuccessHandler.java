@@ -20,6 +20,7 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
 		response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		if (savedRequest == null) {
 			clearAuthenticationAttributes(request);
 			return;

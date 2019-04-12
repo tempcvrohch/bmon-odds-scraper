@@ -2,15 +2,14 @@ package com.rohanch.bmonoddsscraper.controllers;
 
 import com.rohanch.bmonoddsscraper.models.db.MarketState;
 import com.rohanch.bmonoddsscraper.models.db.Match;
+import com.rohanch.bmonoddsscraper.models.wrapper.UserWrapper;
 import com.rohanch.bmonoddsscraper.repositories.MarketStateRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchStateRepository;
 import com.rohanch.bmonoddsscraper.services.LiveMatchesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -20,6 +19,7 @@ import java.util.GregorianCalendar;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = {"*"}, allowCredentials = "true")
 public class MatchController {
 	@Autowired
 	private MatchRepository matchRepository;
@@ -54,14 +54,14 @@ public class MatchController {
 		return match;
 	}
 
-	//TODO: place this in a new controller
+	//TODO: place this in a new controller?
 	@GetMapping("/match/{id}/market/latest")
 	public MarketState[] GetLatestMarketOnMatchId(@PathVariable("id") Long id) {
 		return marketStateRepository.findLatestMarketStatesOnMatchId(id);
 	}
 
 	@GetMapping("/matches/recent")
-	public Iterable<Match> GetRecentMatches() {
+	public Iterable<Match> GetRecentMatches(@AuthenticationPrincipal UserWrapper user) {
 		var calendar = new GregorianCalendar();
 		calendar.add(Calendar.DATE, -1);
 		var matches = matchRepository.findAfterTimestamp(new Timestamp(calendar.getTimeInMillis()));
