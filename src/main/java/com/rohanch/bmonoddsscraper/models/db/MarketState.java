@@ -37,11 +37,12 @@ public class MarketState extends BaseEntity {
 	private String playerName;
 
 	@JsonProperty("fixtureId")
-	@Column(name = "fixture_id", nullable = false)
+	@Column(name = "b365_fixture_id", nullable = false)
 	private Long fixtureId;
 
+	//this is the bet365 bet_id, no reference to models/db/Bet
 	@JsonProperty("betId")
-	@Column(name = "bet_id", nullable = false)
+	@Column(name = "b365_bet_id", nullable = false)
 	private Long betId;
 
 	@JsonProperty("suspended")
