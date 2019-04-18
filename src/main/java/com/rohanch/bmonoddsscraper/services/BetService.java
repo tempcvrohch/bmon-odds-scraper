@@ -26,6 +26,10 @@ public class BetService {
 			throw new InsufficientBalanceException();
 		}
 
+		if (bet.getStake() < 0.25 || bet.getStake() > 100) {
+			throw new StakeOutOfBoundsException();
+		}
+
 		var previousBet = betRepository.GetBetOnMarketStateIdAndUserId(bet.getMarketState().getId(), user.getId());
 		if (previousBet != null) {
 			throw new BetAlreadyPlacedException();
@@ -68,6 +72,9 @@ public class BetService {
 	}
 
 	public class UnknownMarketStateOnBetException extends RuntimeException {
+	}
+
+	public class StakeOutOfBoundsException extends RuntimeException {
 	}
 
 	public class InvalidFractionalOddException extends RuntimeException {

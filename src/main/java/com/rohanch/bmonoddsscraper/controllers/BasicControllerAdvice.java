@@ -21,7 +21,7 @@ public class BasicControllerAdvice {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ScrapeTimerService.ScrapeTimerException.class, WebDriverService.WebDriverException.class,
 			MatchController.MatchNotFound.class, UserDetailService.UsernameTakenException.class, BetService.BetAlreadyPlacedException.class,
-			BetService.InsufficientBalanceException.class, BetService.UnknownMarketStateOnBetException.class})
+			BetService.InsufficientBalanceException.class, BetService.UnknownMarketStateOnBetException.class, BetService.StakeOutOfBoundsException.class})
 	public void handleBadRequest(Exception exception) {
 		logger.info(exception.getLocalizedMessage());
 	}
