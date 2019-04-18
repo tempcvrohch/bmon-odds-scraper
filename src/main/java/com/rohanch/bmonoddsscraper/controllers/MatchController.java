@@ -2,7 +2,7 @@ package com.rohanch.bmonoddsscraper.controllers;
 
 import com.rohanch.bmonoddsscraper.models.db.MarketState;
 import com.rohanch.bmonoddsscraper.models.db.Match;
-import com.rohanch.bmonoddsscraper.models.wrapper.UserWrapper;
+import com.rohanch.bmonoddsscraper.models.generic.UserWrapper;
 import com.rohanch.bmonoddsscraper.repositories.MarketStateRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchStateRepository;

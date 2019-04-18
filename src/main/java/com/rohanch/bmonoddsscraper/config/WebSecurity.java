@@ -49,6 +49,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				.antMatchers("/*")
 				.permitAll()
 				.and()
+				.authorizeRequests()
+				.antMatchers("/user/**", "/bet/**")
+				.authenticated()
+				.and()
 				.csrf().disable();
 	}
 

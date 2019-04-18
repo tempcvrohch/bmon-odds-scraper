@@ -36,7 +36,7 @@ public class BetService {
 		//TODO: this bookie is too lenient, check if targetMarketState matches the newest marketState of this match
 		bet.setMarketState(targetMarketState);
 		bet.setUser(user);
-		bet.setProcessed(false);
+		bet.setStatus(Bet.BetStatus.PENDING);
 
 		var decimalOdd = calculateFloatDecimalOdd(targetMarketState.getOdd());
 		bet.setToReturn(bet.getStake() * decimalOdd);

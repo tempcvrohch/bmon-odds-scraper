@@ -26,7 +26,7 @@ public class BasicControllerAdvice {
 		logger.info(exception.getLocalizedMessage());
 	}
 
-	@ResponseStatus(HttpStatus.NOT_IMPLEMENTED) //?
+	@ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
 	@ExceptionHandler({Landing.LanguageNotAvailableException.class})
 	public void handleLanguageError(Exception exception) {
 		logger.info(exception.getLocalizedMessage());
@@ -39,7 +39,7 @@ public class BasicControllerAdvice {
 	}
 
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
-	@ExceptionHandler({BetController.UnauthenticatedUserException.class})
+	@ExceptionHandler({})
 	public void handleUnautherizeddError(Exception exception) {
 		logger.error(exception.getLocalizedMessage());
 	}

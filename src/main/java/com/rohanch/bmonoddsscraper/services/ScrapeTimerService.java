@@ -70,13 +70,15 @@ public class ScrapeTimerService {
 				liveMatchesService.UpdateMatches(matches);
 			}
 		} catch (Exception e) {
-			logger.error("Stopping scrape timer \"{}\" on market \"{}\"", sportName, marketName, e);
-
-			StopScraper(marketName);
+			if (e instanceof org.openqa.selenium.WebDriverException) {
+				//TODO: rare event when the scrape JS is executed during a forced page reload
+			} else {
+				logger.error("Stopping scrape timer \"{}\" on market \"{}\"", sportName, marketName, e);
+				StopScraper(marketName);
+			}
 		}
 	}
 
-	//TODO: combine these and use a message to split difirentiate them?
 	public class ScrapeTimerException extends RuntimeException {
 		ScrapeTimerException(String s) {
 			super(s);

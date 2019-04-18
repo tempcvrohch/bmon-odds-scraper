@@ -1,7 +1,7 @@
 package com.rohanch.bmonoddsscraper.services;
 
 import com.rohanch.bmonoddsscraper.models.db.User;
-import com.rohanch.bmonoddsscraper.models.wrapper.UserWrapper;
+import com.rohanch.bmonoddsscraper.models.generic.UserWrapper;
 import com.rohanch.bmonoddsscraper.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

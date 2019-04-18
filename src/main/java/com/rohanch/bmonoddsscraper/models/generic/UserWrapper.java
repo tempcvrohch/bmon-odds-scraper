@@ -1,4 +1,4 @@
-package com.rohanch.bmonoddsscraper.models.wrapper;
+package com.rohanch.bmonoddsscraper.models.generic;
 
 import com.rohanch.bmonoddsscraper.models.db.User;
 import org.springframework.security.core.GrantedAuthority;

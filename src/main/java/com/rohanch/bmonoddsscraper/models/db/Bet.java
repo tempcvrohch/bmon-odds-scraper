@@ -20,6 +20,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "bets")
 public class Bet extends BaseEntity {
+	@JsonProperty("status")
+	@Column(name = "status", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private BetStatus status;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonProperty("id")
@@ -32,15 +37,14 @@ public class Bet extends BaseEntity {
 	@JsonProperty("toReturn")
 	@Column(name = "to_return", nullable = false)
 	private Float toReturn;
-
-	@JsonProperty("processed")
-	@Column(name = "processed", nullable = false)
-	private boolean processed;
-
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "market_state_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private MarketState marketState;
+
+	public BetStatus getStatus() {
+		return status;
+	}
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "user_id", nullable = false)
@@ -72,12 +76,12 @@ public class Bet extends BaseEntity {
 		this.toReturn = toReturn;
 	}
 
-	public boolean isProcessed() {
-		return processed;
+	public void setStatus(BetStatus status) {
+		this.status = status;
 	}
 
-	public void setProcessed(boolean processed) {
-		this.processed = processed;
+	public enum BetStatus {
+		WIN, LOSS, PENDING, VOID
 	}
 
 	public MarketState getMarketState() {
