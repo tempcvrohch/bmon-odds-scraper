@@ -2,7 +2,6 @@ package com.rohanch.bmonoddsscraper.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -25,32 +24,25 @@ import java.util.Objects;
 public class MarketState extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@JsonProperty("id")
 	private Long id;
 
-	@JsonProperty("marketName")
-	@Column(name = "market_name", nullable = false)
+	@Column(nullable = false)
 	private String marketName;
 
-	@JsonProperty("playerName")
-	@Column(name = "player_name", nullable = false)
+	@Column(nullable = false)
 	private String playerName;
 
-	@JsonProperty("fixtureId")
 	@Column(name = "b365_fixture_id", nullable = false)
 	private Long fixtureId;
 
 	//this is the bet365 bet_id, no reference to models/db/Bet
-	@JsonProperty("betId")
 	@Column(name = "b365_bet_id", nullable = false)
 	private Long betId;
 
-	@JsonProperty("suspended")
-	@Column(name = "suspended", nullable = false)
+	@Column(nullable = false)
 	private boolean suspended;
 
-	@JsonProperty("odd")
-	@Column(name = "odd", nullable = false)
+	@Column(nullable = false)
 	private String odd;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -59,72 +51,58 @@ public class MarketState extends BaseEntity {
 	@JsonIgnore
 	private MatchState matchState;
 
-	@JsonProperty("id")
 	public Long getId() {
 		return id;
 	}
 
-	@JsonProperty("id")
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	@JsonProperty("marketName")
 	public String getMarketName() {
 		return marketName;
 	}
 
-	@JsonProperty("marketName")
 	public void setMarketName(String marketName) {
 		this.marketName = marketName;
 	}
 
-	@JsonProperty("playerName")
 	public String getPlayerName() {
 		return playerName;
 	}
 
-	@JsonProperty("playerName")
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
 	}
 
-	@JsonProperty("fixtureId")
 	public Long getFixtureId() {
 		return fixtureId;
 	}
 
-	@JsonProperty("fixtureId")
 	public void setFixtureId(Long fixtureId) {
 		this.fixtureId = fixtureId;
 	}
 
-	@JsonProperty("betId")
 	public Long getBetId() {
 		return betId;
 	}
 
-	@JsonProperty("betId")
 	public void setBetId(Long betId) {
 		this.betId = betId;
 	}
 
-	@JsonProperty("suspended")
 	public boolean isSuspended() {
 		return suspended;
 	}
 
-	@JsonProperty("suspended")
 	public void setSuspended(boolean suspended) {
 		this.suspended = suspended;
 	}
 
-	@JsonProperty("odd")
 	public String getOdd() {
 		return odd;
 	}
 
-	@JsonProperty("odd")
 	public void setOdd(String odd) {
 		this.odd = odd;
 	}

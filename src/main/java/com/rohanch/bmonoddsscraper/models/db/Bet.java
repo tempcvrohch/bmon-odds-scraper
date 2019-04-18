@@ -2,7 +2,6 @@ package com.rohanch.bmonoddsscraper.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -20,31 +19,24 @@ import javax.persistence.*;
 @Entity
 @Table(name = "bets")
 public class Bet extends BaseEntity {
-	@JsonProperty("status")
-	@Column(name = "status", nullable = false)
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private BetStatus status;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@JsonProperty("id")
-	private Long id;
-
-	@JsonProperty("stake")
-	@Column(name = "stake", nullable = false)
+	@Column(nullable = false)
 	private Float stake;
 
-	@JsonProperty("toReturn")
-	@Column(name = "to_return", nullable = false)
+	@Column(nullable = false)
 	private Float toReturn;
+
 	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "market_state_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private MarketState marketState;
-
-	public BetStatus getStatus() {
-		return status;
-	}
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "user_id", nullable = false)
@@ -58,6 +50,18 @@ public class Bet extends BaseEntity {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public BetStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(BetStatus status) {
+		this.status = status;
+	}
+
+	public enum BetStatus {
+		WIN, LOSS, PENDING, VOID
 	}
 
 	public Float getStake() {
@@ -74,14 +78,6 @@ public class Bet extends BaseEntity {
 
 	public void setToReturn(Float toReturn) {
 		this.toReturn = toReturn;
-	}
-
-	public void setStatus(BetStatus status) {
-		this.status = status;
-	}
-
-	public enum BetStatus {
-		WIN, LOSS, PENDING, VOID
 	}
 
 	public MarketState getMarketState() {

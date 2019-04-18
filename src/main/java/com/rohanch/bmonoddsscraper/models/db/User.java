@@ -1,7 +1,6 @@
 package com.rohanch.bmonoddsscraper.models.db;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.persistence.*;
@@ -18,19 +17,15 @@ import javax.persistence.*;
 @Table(name = "users")
 public class User extends BaseEntity {
 	@Id
-	@JsonProperty("id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@JsonProperty("username")
 	@Column(name = "user_name", nullable = false, unique = true)
 	private String username;
 
-	@JsonProperty("password")
 	@Column(name = "password", nullable = false)
 	private String password;
 
-	@JsonProperty("balance")
 	@Column(name = "balance")
 	private Float balance;
 
