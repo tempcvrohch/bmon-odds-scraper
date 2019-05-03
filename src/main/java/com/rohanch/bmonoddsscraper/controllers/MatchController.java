@@ -2,13 +2,11 @@ package com.rohanch.bmonoddsscraper.controllers;
 
 import com.rohanch.bmonoddsscraper.models.db.MarketState;
 import com.rohanch.bmonoddsscraper.models.db.Match;
-import com.rohanch.bmonoddsscraper.models.generic.UserWrapper;
 import com.rohanch.bmonoddsscraper.repositories.MarketStateRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchRepository;
 import com.rohanch.bmonoddsscraper.repositories.MatchStateRepository;
 import com.rohanch.bmonoddsscraper.services.LiveMatchesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -61,7 +59,7 @@ public class MatchController {
 	}
 
 	@GetMapping("/matches/recent")
-	public Iterable<Match> GetRecentMatches(@AuthenticationPrincipal UserWrapper user) {
+	public Iterable<Match> GetRecentMatches() {
 		var calendar = new GregorianCalendar();
 		calendar.add(Calendar.DATE, -1);
 		var matches = matchRepository.findAfterTimestamp(new Timestamp(calendar.getTimeInMillis()));
