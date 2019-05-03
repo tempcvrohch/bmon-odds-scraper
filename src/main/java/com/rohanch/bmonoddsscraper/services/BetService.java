@@ -65,6 +65,21 @@ public class BetService {
 		return 1 + (leftSideOdd / rightSideOdd);
 	}
 
+	void ProcessFinishedBet(Bet bet, boolean wonBet) {
+		Bet.BetStatus status = Bet.BetStatus.LOSS;
+		if (wonBet) {
+			status = Bet.BetStatus.WIN;
+			userRepository.incrementBalanceByUsername(bet.getUser().getId(), bet.getToReturn());
+		}
+
+		betRepository.updateBetOnBetStatusById(bet.getUser().getId(), status);//.name()
+	}
+
+	void ProcessVoidBet(Bet bet) {
+		userRepository.incrementBalanceByUsername(bet.getUser().getId(), bet.getStake());
+		betRepository.updateBetOnBetStatusById(bet.getUser().getId(), Bet.BetStatus.VOID); //.name()
+	}
+
 	public class InsufficientBalanceException extends RuntimeException {
 	}
 
