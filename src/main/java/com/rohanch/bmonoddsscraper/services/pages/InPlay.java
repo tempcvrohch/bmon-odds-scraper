@@ -19,6 +19,9 @@ public class InPlay {
 	@Autowired
 	private Inject inject;
 
+	@Autowired
+	private ObjectMapper objectMapper;
+
 	public boolean IsLiveSportAvailable(WebDriver webDriver, String sportName) {
 		try {
 			return webDriver.findElements(By.xpath(String.format("//%s[text()=\"%s\"]", "div", sportName))).size() > 0;
@@ -55,8 +58,7 @@ public class InPlay {
 			//throw new InPlayException(String.format("No markets available for games in \"%s\"/\"%s\"\n", sportName, marketName));
 		}
 
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.convertValue(res, Match[].class);
+		return objectMapper.convertValue(res, Match[].class);
 	}
 
 	private boolean hasAvailableMatchesForCurrentSportName(WebDriver webDriver) {
