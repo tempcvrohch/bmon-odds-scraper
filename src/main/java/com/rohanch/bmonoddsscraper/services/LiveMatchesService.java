@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 @Service
 @Transactional
@@ -25,11 +28,13 @@ public class LiveMatchesService {
 	private MatchStateRepository matchStateRepository;
 
 	@Autowired
+	private BetResultService betResultService;
+
+	@Autowired
 	private MarketStateRepository marketStateRepository;
-	private ArrayList<Match> persistedMatchEntities = new ArrayList<>();
 
-	private List<Match> liveMatchEntities = new ArrayList<>();
-
+	private List<Match> persistedMatchEntities = new ArrayList<>(); //contains matches of the entire day
+	private List<Match> liveMatchEntities = new ArrayList<>(); //contains matches of the current UpdateMatches tick
 	public List<Match> getLiveMatchEntities() {
 		return liveMatchEntities;
 	}
@@ -41,37 +46,47 @@ public class LiveMatchesService {
 	 * @param updatedMatches The currently scraped list of matches.
 	 */
 //	@Transactional
-	void UpdateMatches(Match[] updatedMatches) {
-		liveMatchEntities = Arrays.asList(updatedMatches);
-		var created = 0;
-		var updated = 0;
-
+	void UpdateMatches(List<Match> updatedMatches) {
 		if (persistedMatchEntities.isEmpty()) {
 			persistedMatchEntities = getRecentMatchesFromDB();
+		} else {
+			processDisappearedMatches(liveMatchEntities, updatedMatches);
 		}
 
-		logger.debug("Checking {} matches.", updatedMatches.length);
+		liveMatchEntities = updatedMatches;
 
-		for (var updatedMatch : updatedMatches) {
-			var optMatch = persistedMatchEntities
-					.stream()
-					.filter(fMatch -> fMatch.equals(updatedMatch))
-					.findFirst();
+		logger.debug("Checking {} matches.", liveMatchEntities.size());
 
-			if (optMatch.isPresent()) {
-				var changed = updateMatchNestedElements(optMatch.get(), updatedMatch);
-				if (changed) {
-					updated++;
-				}
-			} else {
-				persistNewMatch(updatedMatch);
-				created++;
+		liveMatchEntities.forEach(this::processUpdatedLiveMatch);
+	}
+
+	private void processUpdatedLiveMatch(Match liveMatch) {
+		var optMatch = persistedMatchEntities
+				.stream()
+				.filter(fMatch -> fMatch.equals(liveMatch))
+				.findFirst();
+
+		if (optMatch.isPresent()) {
+			var persistedMatch = optMatch.get();
+			updateMatchNestedElements(persistedMatch, liveMatch);
+		} else {
+			persistNewMatch(liveMatch);
+		}
+	}
+
+	private void processDisappearedMatches(List<Match> previousMatchEntities, List<Match> currentMatchEntities) {
+		previousMatchEntities.forEach(prevMatch -> {
+			var optCurMatch = currentMatchEntities.stream()
+					.filter(curMatch -> curMatch.equals(prevMatch)).findFirst();
+
+			if (optCurMatch.isEmpty()) {
+				//this prevMatch doesn't have the db reference so find the correct one.
+				var optLiveMatch = persistedMatchEntities.stream()
+						.filter(persistedMatch -> persistedMatch.equals(prevMatch)).findFirst();
+
+				optLiveMatch.ifPresent(match -> betResultService.ProcessUserBetsOnMatch(match));
 			}
-		}
-
-		if (created > 0 || updated > 0) {
-			logger.debug("{} matches created and {} matches updated.", created, updated);
-		}
+		});
 	}
 
 	/**
@@ -112,7 +127,7 @@ public class LiveMatchesService {
 		insertedMatch.setMatchState(transientMatchState);
 		insertedMatch = matchRepository.save(insertedMatch);
 
-		var insertedMarketStates = marketStateRepository.saveAll(newMatch.getMatchState().getMarketStates());
+		var insertedMarketStates = marketStateRepository.saveAll(insertedMatch.getMatchState().getMarketStates());
 		insertedMatch.getMatchState().setMarketStates(insertedMarketStates);
 		persistedMatchEntities.add(insertedMatch);
 	}
@@ -127,8 +142,7 @@ public class LiveMatchesService {
 	 *  @param persistedMatch current persisted match
 	 * @param updatedMatch   the updated match
 	 */
-	private boolean updateMatchNestedElements(Match persistedMatch, Match updatedMatch) { //TODO: this whole thing feels confusing
-		var changed = false;
+	private void updateMatchNestedElements(Match persistedMatch, Match updatedMatch) { //TODO: this whole thing feels confusing
 		var preparedMatch = setParentReferencesOnChildren(updatedMatch, persistedMatch);
 
 		if (!persistedMatch.getMatchState().equals(preparedMatch.getMatchState())) {
@@ -137,16 +151,12 @@ public class LiveMatchesService {
 
 			persistedMatch.setMatchState(insertedMatchState);
 			matchRepository.save(persistedMatch); //save the reference to the new match state to the match object
-			changed = true;
 		}
 
 		if (persistedMatch.getMatchState().getMarketStates() == null ||
 				!persistedMatch.getMatchState().getMarketStates().equals(preparedMatch.getMatchState().getMarketStates())) {
 			persistedMatch.getMatchState().setMarketStates(preparedMatch.getMatchState().getMarketStates());
 			marketStateRepository.saveAll(persistedMatch.getMatchState().getMarketStates());
-			changed = true;
 		}
-
-		return changed;
 	}
 }
