@@ -1,0 +1,38 @@
+{
+  "id": 50458,
+  "bId": "80220508C13A_1_9",
+  "name": "Shane/Song v Goransson/Reese",
+  "sportName": "Tennis",
+  "leagueName": "Challenger Tallahassee MD",
+  "createdAt": "2019-04-24T20:49:13.975+0000",
+  "updatedAt": "2019-04-24T21:31:03.504+0000",
+  "matchState": {
+	"setScore": "6-1,6-4",
+	"pointScore": "0-0",
+	"servingIndex": "1,0",
+	"marketStates": [
+	  {
+		"id": 9991,
+		"marketName": "Winner",
+		"playerName": "Shane/Song",
+		"fixtureId": 2301731,
+		"betId": 39103001,
+		"suspended": true,
+		"odd": "2/1"
+	  },
+	  {
+		"id": 99912,
+		"marketName": "Winner",
+		"playerName": "Goransson/Reese",
+		"fixtureId": 2301731,
+		"betId": 39103002,
+		"suspended": true,
+		"odd": "2/1"
+	  }
+	],
+	"createdAt": "2019-04-24T21:31:03.501+0000",
+	"updatedAt": "2019-04-24T21:31:03.501+0000",
+	"id": 51566
+  },
+  "live": false
+}

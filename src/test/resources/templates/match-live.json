@@ -1,0 +1,38 @@
+{
+  "id": 50459,
+  "bId": "80220518C13A_1_9",
+  "name": "Rogerer Federer v Kiki Bertens",
+  "sportName": "Tennis",
+  "leagueName": "Challenger Tallahassee MD",
+  "createdAt": "2019-04-24T20:49:13.975+0000",
+  "updatedAt": "2019-04-24T21:31:03.504+0000",
+  "matchState": {
+	"setScore": "6-0,6-0",
+	"pointScore": "0-0",
+	"servingIndex": "1,0",
+	"marketStates": [
+	  {
+		"id": 9991,
+		"marketName": "Winner",
+		"playerName": "Rogerer Federer",
+		"fixtureId": 2301733,
+		"betId": 39103003,
+		"suspended": true,
+		"odd": "2/1"
+	  },
+	  {
+		"id": 99912,
+		"marketName": "Winner",
+		"playerName": "Kiki Bertens",
+		"fixtureId": 2301734,
+		"betId": 39103004,
+		"suspended": true,
+		"odd": "2/1"
+	  }
+	],
+	"createdAt": "2019-04-24T21:31:03.501+0000",
+	"updatedAt": "2019-04-24T21:31:03.501+0000",
+	"id": 51569
+  },
+  "live": true
+}
