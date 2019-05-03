@@ -2,6 +2,7 @@ package com.rohanch.bmonoddsscraper.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -41,7 +42,6 @@ public class Bet extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "user_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIgnore
 	private User user;
 
 	public Long getId() {
@@ -88,10 +88,12 @@ public class Bet extends BaseEntity {
 		this.marketState = marketState;
 	}
 
+	@JsonIgnore
 	public User getUser() {
 		return user;
 	}
 
+	@JsonProperty("user")
 	public void setUser(User user) {
 		this.user = user;
 	}
