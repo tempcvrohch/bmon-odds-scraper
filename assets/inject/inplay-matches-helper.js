@@ -117,8 +117,8 @@ function createMarketStateObject(playerName, data, market) {
 
 function createMatchStateObject(sportName, data, marketStates) {
     return {
-    	setScore: data.XP, //should be the other way around I think
-        pointScore: data.SS,
+    	setScore: data.SS,
+        pointScore: data.XP,
         servingIndex: data.PI,
         marketStates
     }
