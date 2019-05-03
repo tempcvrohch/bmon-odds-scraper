@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -67,7 +68,7 @@ public class ScrapeTimerService {
 
 			var matches = inPlay.ScrapeLiveGamesData(webDriver, sportName, marketName);
 			if (matches.length > 0) {
-				liveMatchesService.UpdateMatches(matches);
+				liveMatchesService.UpdateMatches(Arrays.asList(matches));
 			}
 		} catch (Exception e) {
 			if (e instanceof org.openqa.selenium.WebDriverException) {
