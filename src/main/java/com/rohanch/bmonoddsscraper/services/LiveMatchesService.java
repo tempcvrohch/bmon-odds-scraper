@@ -33,14 +33,13 @@ public class LiveMatchesService {
 	@Autowired
 	private MarketStateRepository marketStateRepository;
 
-	private List<Match> persistedMatchEntities = new ArrayList<>(); //contains matches of the entire day
+	private List<Match> persistedMatchEntities = new ArrayList<>(); //contains matches of last 24H
 	private List<Match> liveMatchEntities = new ArrayList<>(); //contains matches of the current UpdateMatches tick
 	public List<Match> getLiveMatchEntities() {
 		return liveMatchEntities;
 	}
 
 	/**
-	 * New matches are persisted.
 	 * Compares updatedMatches with the cached persistedMatches and upserts new Match/Market states if changed.
 	 *
 	 * @param updatedMatches The currently scraped list of matches.
@@ -99,7 +98,7 @@ public class LiveMatchesService {
 	}
 
 	/**
-	 * Sets a match's multiple nested entities(MatchState and MarketState) to each reference their parents for JPA.
+	 * Sets a parent reference of Match on MatchState and MatchState on multiple MarketStates
 	 *
 	 * @param match to be updated.
 	 * @return the updated match with referenced parents.
@@ -113,6 +112,11 @@ public class LiveMatchesService {
 		return match;
 	}
 
+	/**
+	 * Persist a match and the associated MatchState and MarketStates to the DB and cache list
+	 *
+	 * @param newMatch a match not yet added to the DB
+	 */
 	private void persistNewMatch(Match newMatch) {
 		var preparedMatch = setParentReferencesOnChildren(newMatch, newMatch);
 
@@ -120,14 +124,19 @@ public class LiveMatchesService {
 		var transientMatchState = preparedMatch.getMatchState();
 		preparedMatch.setMatchState(null);
 
+		//save the Match without the MatchState
 		var insertedMatch = matchRepository.save(preparedMatch);
+		//save the matchState(this one has a reference to its parent)
 		transientMatchState = matchStateRepository.save(transientMatchState);
 
-		//the match state has been persisted and can now be saved to the match
+		//the match state now has an id and can be added to the existing match record
 		insertedMatch.setMatchState(transientMatchState);
+		//TODO JPA doesn't trigger on setMatchState?
 		insertedMatch = matchRepository.save(insertedMatch);
 
 		var insertedMarketStates = marketStateRepository.saveAll(insertedMatch.getMatchState().getMarketStates());
+
+		//add the inserted marketStates back to the insertedMatch object(they now also have DB ids)
 		insertedMatch.getMatchState().setMarketStates(insertedMarketStates);
 		persistedMatchEntities.add(insertedMatch);
 	}
@@ -142,21 +151,27 @@ public class LiveMatchesService {
 	 *  @param persistedMatch current persisted match
 	 * @param updatedMatch   the updated match
 	 */
-	private void updateMatchNestedElements(Match persistedMatch, Match updatedMatch) { //TODO: this whole thing feels confusing
+	private void updateMatchNestedElements(Match persistedMatch, Match updatedMatch) {
+		//The updatedMatch is directly from bet365 and doesn't have JPA Parents set so copy the ones of our cached match
 		var preparedMatch = setParentReferencesOnChildren(updatedMatch, persistedMatch);
 
+		//Check for a point/set/serve index/score difference
 		if (!persistedMatch.getMatchState().equals(preparedMatch.getMatchState())) {
 			persistedMatch.setMatchState(preparedMatch.getMatchState());
-			var insertedMatchState = matchStateRepository.save(persistedMatch.getMatchState()); //save the new match state
+			var insertedMatchState = matchStateRepository.save(persistedMatch.getMatchState());
 
+			//have the Match object in the DB reference to the most recent MatchState
 			persistedMatch.setMatchState(insertedMatchState);
-			matchRepository.save(persistedMatch); //save the reference to the new match state to the match object
+			matchRepository.save(persistedMatch);
 		}
 
 		if (persistedMatch.getMatchState().getMarketStates() == null ||
 				!persistedMatch.getMatchState().getMarketStates().equals(preparedMatch.getMatchState().getMarketStates())) {
+
 			persistedMatch.getMatchState().setMarketStates(preparedMatch.getMatchState().getMarketStates());
 			marketStateRepository.saveAll(persistedMatch.getMatchState().getMarketStates());
+
+			//MarketStates are not interesting enough to update together with the Match object so don't update the Match object.
 		}
 	}
 }

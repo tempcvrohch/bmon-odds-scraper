@@ -80,6 +80,7 @@ public class BetService {
 		betRepository.updateBetOnBetStatusById(bet.getUser().getId(), Bet.BetStatus.VOID); //.name()
 	}
 
+	//TODO perhaps create a AddBetException, all of these cause a 400 anyway
 	public class InsufficientBalanceException extends RuntimeException {
 	}
 
