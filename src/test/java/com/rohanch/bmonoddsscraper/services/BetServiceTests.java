@@ -48,25 +48,25 @@ public class BetServiceTests {
 	}
 
 	@Test(expected = BetService.InsufficientBalanceException.class)
-	public void throwsInsufficientBalanceWhenAdding() {
+	public void throwsInsufficientBalanceWhenAddingBet() {
 		user.setBalance(1f);
 		betService.AddBet(user, bet);
 	}
 
 	@Test(expected = BetService.StakeOutOfBoundsException.class)
-	public void throwsStakeOutOfBoundWhenAdding() {
+	public void throwsStakeOutOfBoundWhenAddingBet() {
 		bet.setStake(101f);
 		betService.AddBet(user, bet);
 	}
 
 	@Test(expected = BetService.BetAlreadyPlacedException.class)
-	public void throwsAlreadyPlacedWhenAdding() {
+	public void throwsAlreadyPlacedWhenAddingBet() {
 		Mockito.when(betRepository.GetBetOnMarketStateIdAndUserId(bet.getMarketState().getId(), user.getId())).thenReturn(bet);
 		betService.AddBet(user, bet);
 	}
 
 	@Test(expected = BetService.UnknownMarketStateOnBetException.class)
-	public void throwsUnknownMarketStateWhenAdding() {
+	public void throwsUnknownMarketStateWhenAddingBet() {
 		Mockito.when(marketStateRepository.findById(bet.getMarketState().getId())).thenReturn(Optional.empty());
 		betService.AddBet(user, bet);
 	}

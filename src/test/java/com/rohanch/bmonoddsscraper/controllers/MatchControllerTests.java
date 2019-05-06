@@ -56,7 +56,7 @@ public class MatchControllerTests {
 	}
 
 	@Test
-	public void givenRecentMatches_whenGetRecentMatches_thenReturnJsonArray() throws Exception {
+	public void returnsJsonArrayWhenGetRecentMatches() throws Exception {
 		var calendar = new GregorianCalendar();
 		calendar.add(Calendar.DATE, -1);
 

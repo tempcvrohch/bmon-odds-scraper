@@ -49,13 +49,13 @@ public class BetResultServiceTests {
 	}
 
 	@Test
-	public void marksBetWinning() {
+	public void marksBetWonWhenMatchEndedWithWinningBet() {
 		betResultService.ProcessUserBetsOnMatch(match);
 		Mockito.verify(betService).ProcessFinishedBet(bet, true);
 	}
 
 	@Test
-	public void marksBetLosing() {
+	public void marksBetLostWhenMatchEndedWithLosingBet() {
 		match.getMatchState().setSetScore("4-6,4-6");
 
 		betResultService.ProcessUserBetsOnMatch(match);
@@ -63,7 +63,7 @@ public class BetResultServiceTests {
 	}
 
 	@Test
-	public void marksBetVoid() {
+	public void marksBetLostWithInvalidScore() {
 		match.getMatchState().setSetScore("4-6,4-4");
 
 		betResultService.ProcessUserBetsOnMatch(match);
