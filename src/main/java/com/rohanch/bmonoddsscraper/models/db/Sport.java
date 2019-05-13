@@ -1,8 +1,11 @@
 package com.rohanch.bmonoddsscraper.models.db;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import java.util.List;
 
+@Data
 public class Sport {
 	@Column(nullable = false)
 	private String sportName;
@@ -14,36 +17,4 @@ public class Sport {
 	private String wsId;
 
 	private List<MarketType> marketTypeEntities = null;
-
-	public String getSportName() {
-		return sportName;
-	}
-
-	public void setSportName(String sportName) {
-		this.sportName = sportName;
-	}
-
-	public String getSportId() {
-		return sportId;
-	}
-
-	public void setSportId(String sportId) {
-		this.sportId = sportId;
-	}
-
-	public String getWsId() {
-		return wsId;
-	}
-
-	public void setWsId(String wsId) {
-		this.wsId = wsId;
-	}
-
-	public List<MarketType> getMarketTypeEntities() {
-		return marketTypeEntities;
-	}
-
-	public void setMarketTypeEntities(List<MarketType> marketTypeEntities) {
-		this.marketTypeEntities = marketTypeEntities;
-	}
 }

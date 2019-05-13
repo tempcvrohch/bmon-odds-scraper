@@ -134,7 +134,7 @@ public class LiveMatchesService {
 		//TODO JPA doesn't trigger on setMatchState?
 		insertedMatch = matchRepository.save(insertedMatch);
 
-		var insertedMarketStates = marketStateRepository.saveAll(insertedMatch.getMatchState().getMarketStates());
+		var insertedMarketStates = marketStateRepository.saveAll(preparedMatch.getMatchState().getMarketStates());
 
 		//add the inserted marketStates back to the insertedMatch object(they now also have DB ids)
 		insertedMatch.getMatchState().setMarketStates(insertedMarketStates);

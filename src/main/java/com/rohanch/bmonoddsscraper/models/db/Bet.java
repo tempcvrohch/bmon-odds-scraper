@@ -2,6 +2,7 @@ package com.rohanch.bmonoddsscraper.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "bets")
+@Data
 public class Bet extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,48 +36,8 @@ public class Bet extends BaseEntity {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public BetStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(BetStatus status) {
-		this.status = status;
-	}
-
 	public enum BetStatus {
 		WIN, LOSS, PENDING, VOID
-	}
-
-	public Float getStake() {
-		return stake;
-	}
-
-	public void setStake(Float stake) {
-		this.stake = stake;
-	}
-
-	public Float getToReturn() {
-		return toReturn;
-	}
-
-	public void setToReturn(Float toReturn) {
-		this.toReturn = toReturn;
-	}
-
-	public MarketState getMarketState() {
-		return marketState;
-	}
-
-	public void setMarketState(MarketState marketState) {
-		this.marketState = marketState;
 	}
 
 	@JsonIgnore

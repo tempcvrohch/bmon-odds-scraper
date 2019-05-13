@@ -39,6 +39,7 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-hateoas')
 	implementation('org.springframework.boot:spring-boot-starter-web')
 	implementation('org.springframework.boot:spring-boot-starter-security')
+	implementation('org.projectlombok:lombok:1.18.8')
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testCompile group: 'com.h2database', name: 'h2', version: '1.4.197'

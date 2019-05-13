@@ -1,6 +1,7 @@
 package com.rohanch.bmonoddsscraper.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Data
 @Table(name = "market_states")
 public class MarketState extends BaseEntity {
 	@Id
@@ -23,7 +25,6 @@ public class MarketState extends BaseEntity {
 	@Column(name = "b365_fixture_id", nullable = false)
 	private Long fixtureId;
 
-	//this is the bet365 bet_id, no reference to models/db/Bet
 	@Column(name = "b365_bet_id", nullable = false)
 	private Long betId;
 
@@ -38,70 +39,6 @@ public class MarketState extends BaseEntity {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
 	private MatchState matchState;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getMarketName() {
-		return marketName;
-	}
-
-	public void setMarketName(String marketName) {
-		this.marketName = marketName;
-	}
-
-	public String getPlayerName() {
-		return playerName;
-	}
-
-	public void setPlayerName(String playerName) {
-		this.playerName = playerName;
-	}
-
-	public Long getFixtureId() {
-		return fixtureId;
-	}
-
-	public void setFixtureId(Long fixtureId) {
-		this.fixtureId = fixtureId;
-	}
-
-	public Long getBetId() {
-		return betId;
-	}
-
-	public void setBetId(Long betId) {
-		this.betId = betId;
-	}
-
-	public boolean isSuspended() {
-		return suspended;
-	}
-
-	public void setSuspended(boolean suspended) {
-		this.suspended = suspended;
-	}
-
-	public String getOdd() {
-		return odd;
-	}
-
-	public void setOdd(String odd) {
-		this.odd = odd;
-	}
-
-	public MatchState getMatchState() {
-		return matchState;
-	}
-
-	public void setMatchState(MatchState matchState) {
-		this.matchState = matchState;
-	}
 
 	@Override
 	public boolean equals(Object o) {
