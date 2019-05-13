@@ -1,17 +1,6 @@
 package com.rohanch.bmonoddsscraper.models.db;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import javax.persistence.*;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-		"id",
-		"username",
-		"password",
-		"balance",
-})
 
 @Entity
 @Table(name = "users")

@@ -1,18 +1,8 @@
 package com.rohanch.bmonoddsscraper.models.db;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import javax.persistence.Column;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-		"sportName",
-		"sportId",
-		"wsId",
-		"marketTypeEntities"
-})
 public class Sport {
 	@Column(nullable = false)
 	private String sportName;

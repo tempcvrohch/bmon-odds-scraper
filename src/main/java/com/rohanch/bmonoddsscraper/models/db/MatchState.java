@@ -2,21 +2,12 @@ package com.rohanch.bmonoddsscraper.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-		"setScore",
-		"pointScore",
-		"servingIndex",
-		"marketStates",
-})
 
 @Entity
 @Table(name = "matches_states")

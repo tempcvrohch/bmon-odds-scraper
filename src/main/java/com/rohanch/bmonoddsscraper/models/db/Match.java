@@ -1,19 +1,9 @@
 package com.rohanch.bmonoddsscraper.models.db;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.persistence.*;
 import java.util.Objects;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-		"id",
-		"bId",
-		"name",
-		"sportName",
-		"leagueName"
-})
 
 @Entity
 @Table(name = "matches")
