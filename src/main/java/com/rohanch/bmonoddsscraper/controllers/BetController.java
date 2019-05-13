@@ -18,7 +18,7 @@ public class BetController {
 	private BetService betService;
 
 	@PostMapping("/bet/place")
-	public void PlaceBet(@AuthenticationPrincipal UserWrapper user, @RequestBody Bet bet) {
-		betService.AddBet(user.getUser(), bet);
+	public void placeBet(@AuthenticationPrincipal UserWrapper user, @RequestBody Bet bet) {
+		betService.addBet(user.getUser(), bet);
 	}
 }

@@ -10,13 +10,13 @@ import java.util.List;
 
 public interface BetRepository extends JpaRepository<Bet, Long> {
 	@Query(value = "SELECT * FROM bets b WHERE b.market_state_id = :marketStateId AND b.user_id = :userId", nativeQuery = true)
-	Bet GetBetOnMarketStateIdAndUserId(@Param("marketStateId") Long marketStateId, @Param("userId") Long userId);
+	Bet getBetOnMarketStateIdAndUserId(@Param("marketStateId") Long marketStateId, @Param("userId") Long userId);
 
 	@Query(value = "SELECT * FROM bets b WHERE b.user_id = :userId ORDER BY b.created_at DESC LIMIT 25", nativeQuery = true)
-	Bet[] GetBetsPendingOnUserId(@Param("userId") Long userId);
+	Bet[] getBetsPendingOnUserId(@Param("userId") Long userId);
 
 	@Query(value = "SELECT COUNT(id) FROM bets b WHERE b.user_id = :userId AND b.status = :status", nativeQuery = true)
-	long GetAmountBetsPendingOnUserId(@Param("userId") Long userId, @Param("status") String status);
+	long getAmountBetsPendingOnUserId(@Param("userId") Long userId, @Param("status") String status);
 
 	long countByUserIdAndStatus(@Param("userId") Long userId, @Param("status") String status);
 
@@ -26,7 +26,7 @@ public interface BetRepository extends JpaRepository<Bet, Long> {
 			"JOIN market_states mts ON ms.id = mts.match_state_id " +
 			"JOIN bets bts ON mts.id = bts.market_state_id " +
 			"WHERE m.id = :matchId", nativeQuery = true)
-	List<Bet> FindBetsByMatchId(@Param("matchId") Long matchId);
+	List<Bet> findBetsByMatchId(@Param("matchId") Long matchId);
 
 	@Modifying
 	@Query(value = "UPDATE bets SET status = :status WHERE id = :id", nativeQuery = true)

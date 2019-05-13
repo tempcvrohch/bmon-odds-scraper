@@ -34,7 +34,7 @@ public class LiveMatchesService {
 	private MarketStateRepository marketStateRepository;
 
 	private List<Match> persistedMatchEntities = new ArrayList<>(); //contains matches of last 24H
-	private List<Match> liveMatchEntities = new ArrayList<>(); //contains matches of the current UpdateMatches tick
+	private List<Match> liveMatchEntities = new ArrayList<>(); //contains matches of the current updateMatches tick
 	public List<Match> getLiveMatchEntities() {
 		return liveMatchEntities;
 	}
@@ -45,7 +45,7 @@ public class LiveMatchesService {
 	 * @param updatedMatches The currently scraped list of matches.
 	 */
 //	@Transactional
-	void UpdateMatches(List<Match> updatedMatches) {
+	void updateMatches(List<Match> updatedMatches) {
 		if (persistedMatchEntities.isEmpty()) {
 			persistedMatchEntities = getRecentMatchesFromDB();
 		} else {
@@ -83,7 +83,7 @@ public class LiveMatchesService {
 				var optLiveMatch = persistedMatchEntities.stream()
 						.filter(persistedMatch -> persistedMatch.equals(prevMatch)).findFirst();
 
-				optLiveMatch.ifPresent(match -> betResultService.ProcessUserBetsOnMatch(match));
+				optLiveMatch.ifPresent(match -> betResultService.processUserBetsOnMatch(match));
 			}
 		});
 	}

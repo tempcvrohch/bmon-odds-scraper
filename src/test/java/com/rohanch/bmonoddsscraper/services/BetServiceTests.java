@@ -50,25 +50,25 @@ public class BetServiceTests {
 	@Test(expected = BetService.InsufficientBalanceException.class)
 	public void throwsInsufficientBalanceWhenAddingBet() {
 		user.setBalance(1f);
-		betService.AddBet(user, bet);
+		betService.addBet(user, bet);
 	}
 
 	@Test(expected = BetService.StakeOutOfBoundsException.class)
 	public void throwsStakeOutOfBoundWhenAddingBet() {
 		bet.setStake(101f);
-		betService.AddBet(user, bet);
+		betService.addBet(user, bet);
 	}
 
 	@Test(expected = BetService.BetAlreadyPlacedException.class)
 	public void throwsAlreadyPlacedWhenAddingBet() {
-		Mockito.when(betRepository.GetBetOnMarketStateIdAndUserId(bet.getMarketState().getId(), user.getId())).thenReturn(bet);
-		betService.AddBet(user, bet);
+		Mockito.when(betRepository.getBetOnMarketStateIdAndUserId(bet.getMarketState().getId(), user.getId())).thenReturn(bet);
+		betService.addBet(user, bet);
 	}
 
 	@Test(expected = BetService.UnknownMarketStateOnBetException.class)
 	public void throwsUnknownMarketStateWhenAddingBet() {
 		Mockito.when(marketStateRepository.findById(bet.getMarketState().getId())).thenReturn(Optional.empty());
-		betService.AddBet(user, bet);
+		betService.addBet(user, bet);
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class BetServiceTests {
 		var optMarketState = Optional.of(bet.getMarketState());
 		Mockito.when(marketStateRepository.findById(bet.getMarketState().getId())).thenReturn(optMarketState);
 
-		betService.AddBet(user, bet);
+		betService.addBet(user, bet);
 
 		Mockito.verify(betRepository).save(bet);
 		Mockito.verify(userRepository).reduceBalanceByUsername(user.getId(), bet.getStake());
@@ -84,20 +84,20 @@ public class BetServiceTests {
 
 	@Test
 	public void incrementsBalanceAndUpdatesBetStatusOnWonBet() {
-		betService.ProcessFinishedBet(bet, true);
+		betService.processFinishedBet(bet, true);
 		Mockito.verify(userRepository).incrementBalanceByUsername(bet.getUser().getId(), bet.getToReturn());
 		Mockito.verify(betRepository).updateBetOnBetStatusById(bet.getUser().getId(), Bet.BetStatus.WIN);
 	}
 
 	@Test
 	public void updatesBetStatusOnLostBet() {
-		betService.ProcessFinishedBet(bet, false);
+		betService.processFinishedBet(bet, false);
 		Mockito.verify(betRepository).updateBetOnBetStatusById(bet.getUser().getId(), Bet.BetStatus.LOSS);
 	}
 
 	@Test
 	public void updatesBetStatusAndReturnsStakeOnVoidBet() {
-		betService.ProcessVoidBet(bet);
+		betService.processVoidBet(bet);
 		Mockito.verify(userRepository).incrementBalanceByUsername(bet.getUser().getId(), bet.getStake());
 		Mockito.verify(betRepository).updateBetOnBetStatusById(bet.getUser().getId(), Bet.BetStatus.VOID);
 	}

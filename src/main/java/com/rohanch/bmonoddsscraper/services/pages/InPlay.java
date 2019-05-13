@@ -22,7 +22,7 @@ public class InPlay {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public boolean IsLiveSportAvailable(WebDriver webDriver, String sportName) {
+	public boolean isLiveSportAvailable(WebDriver webDriver, String sportName) {
 		try {
 			return webDriver.findElements(By.xpath(String.format("//%s[text()=\"%s\"]", "div", sportName))).size() > 0;
 		} catch (StaleElementReferenceException e) {
@@ -30,26 +30,26 @@ public class InPlay {
 		}
 	}
 
-	public boolean HasLiveSportSelected(WebDriver webDriver, String sportName) {
+	public boolean hasLiveSportSelected(WebDriver webDriver, String sportName) {
 		var sportSelectElement = webDriver.findElement(By.className("ipo-ClassificationBarButtonBase_Selected"));
 		return sportSelectElement.getText().contains(sportName);
 	}
 
-	public void OpenSportOnName(WebDriver webDriver, String sportName) {
+	public void openSportOnName(WebDriver webDriver, String sportName) {
 		var sportSelectElement = webDriver.findElement(By.xpath(String.format("//%s[text()=\"%s\"]", "div", sportName)));
 
 		logger.debug("Clicking sport: \"{}\" in InPlay page", sportName);
 		sportSelectElement.click();
 	}
 
-	public Match[] ScrapeLiveGamesData(WebDriver webDriver, String sportName, String marketName) {
+	public Match[] scrapeLiveGamesData(WebDriver webDriver, String sportName, String marketName) {
 		if (!hasAvailableMatchesForCurrentSportName(webDriver)) {
 			logger.info("No live games available for \"{}\"", sportName);
 			return new Match[]{};
 			//throw new InPlayException(String.format("No Live games available for \"%s\"\n", sportName));
 		}
 
-		var expression = inject.ConstructJSExpressionWithFile(String.format("return ReadOddDataOnBasicMarket(\"%s\",\"%s\");", sportName, marketName), "assets\\inject\\inplay-matches-helper.js");
+		var expression = inject.constructJSExpressionWithFile(String.format("return ReadOddDataOnBasicMarket(\"%s\",\"%s\");", sportName, marketName), "assets\\inject\\inplay-matches-helper.js");
 
 		var res = ((JavascriptExecutor) webDriver).executeScript(expression);
 		if (res == null) {

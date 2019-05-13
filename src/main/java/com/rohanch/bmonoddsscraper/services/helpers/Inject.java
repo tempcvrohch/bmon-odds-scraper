@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 @Component
 public class Inject {
-	public String ConstructJSExpressionWithFile(String jsExpression, String jsFilePath) {
+	public String constructJSExpressionWithFile(String jsExpression, String jsFilePath) {
 		try {
 			byte[] encoded = Files.readAllBytes(Paths.get(jsFilePath));
 			return new String(encoded, StandardCharsets.UTF_8) + "; " + jsExpression;

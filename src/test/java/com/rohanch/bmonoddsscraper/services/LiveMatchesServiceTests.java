@@ -60,7 +60,7 @@ public class LiveMatchesServiceTests {
 		matches.add(match);
 	}
 
-	Match setParentReferences(Match match) {
+	private Match setParentReferences(Match match) {
 		match.getMatchState().setMatch(match);
 		match.getMatchState().getMarketStates().get(0).setMatchState(match.getMatchState());
 		match.getMatchState().getMarketStates().get(1).setMatchState(match.getMatchState());
@@ -92,7 +92,7 @@ public class LiveMatchesServiceTests {
 		var persistedMarketStates = objectMapper.readValue(objectMapper.writeValueAsString(persistedMatch.getMatchState().getMarketStates()), MarketState[].class);
 		Mockito.when(marketStateRepository.saveAll(persistedMatch.getMatchState().getMarketStates())).thenReturn(Arrays.asList(persistedMarketStates));
 
-		liveMatchesService.UpdateMatches(matches);
+		liveMatchesService.updateMatches(matches);
 		Mockito.verify(matchRepository, Mockito.times(2)).save(match);
 		//TODO more verifies
 	}

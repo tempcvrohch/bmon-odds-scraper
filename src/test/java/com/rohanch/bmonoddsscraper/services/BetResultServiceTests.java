@@ -45,28 +45,28 @@ public class BetResultServiceTests {
 		bet = jsonTestLoader.loadBetFromPath("classpath:templates\\bet.json");
 		betsToReturn.add(bet);
 
-		Mockito.when(betRepository.FindBetsByMatchId(match.getId())).thenReturn(betsToReturn);
+		Mockito.when(betRepository.findBetsByMatchId(match.getId())).thenReturn(betsToReturn);
 	}
 
 	@Test
 	public void marksBetWonWhenMatchEndedWithWinningBet() {
-		betResultService.ProcessUserBetsOnMatch(match);
-		Mockito.verify(betService).ProcessFinishedBet(bet, true);
+		betResultService.processUserBetsOnMatch(match);
+		Mockito.verify(betService).processFinishedBet(bet, true);
 	}
 
 	@Test
 	public void marksBetLostWhenMatchEndedWithLosingBet() {
 		match.getMatchState().setSetScore("4-6,4-6");
 
-		betResultService.ProcessUserBetsOnMatch(match);
-		Mockito.verify(betService).ProcessFinishedBet(bet, false);
+		betResultService.processUserBetsOnMatch(match);
+		Mockito.verify(betService).processFinishedBet(bet, false);
 	}
 
 	@Test
 	public void marksBetLostWithInvalidScore() {
 		match.getMatchState().setSetScore("4-6,4-4");
 
-		betResultService.ProcessUserBetsOnMatch(match);
-		Mockito.verify(betService).ProcessVoidBet(bet);
+		betResultService.processUserBetsOnMatch(match);
+		Mockito.verify(betService).processVoidBet(bet);
 	}
 }

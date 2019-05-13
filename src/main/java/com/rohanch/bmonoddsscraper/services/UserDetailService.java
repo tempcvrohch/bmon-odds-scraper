@@ -25,7 +25,7 @@ public class UserDetailService implements UserDetailsService {
 		return new UserWrapper(user);
 	}
 
-	public void Register(User newUser) {
+	public void register(User newUser) {
 		User existingUser = userRepository.findByUsername(newUser.getUsername());
 		if (existingUser != null) {
 			throw new UsernameTakenException();

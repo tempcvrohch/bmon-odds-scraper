@@ -15,14 +15,14 @@ public class RegisterController {
 	private UserDetailService userDetailService;
 
 	@PostMapping("/register")
-	public void Register(@RequestBody User newUser) {
+	public void register(@RequestBody User newUser) {
 		if (isInvalidInput(newUser.getUsername())) {
 			throw new InvalidSyntaxCredentials("invalid username");
 		} else if (isInvalidInput(newUser.getPassword())) {
 			throw new InvalidSyntaxCredentials("invalid password");
 		}
 
-		userDetailService.Register(newUser);
+		userDetailService.register(newUser);
 	}
 
 	private boolean isInvalidInput(String input) {

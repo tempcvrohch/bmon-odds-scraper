@@ -26,7 +26,7 @@ public class ScrapeTimerService {
 
 	private HashMap<String, Timer> scrapeTimers = new HashMap<>();
 
-	public void StartScraper(String sportName, String marketName) {
+	public void startScraper(String sportName, String marketName) {
 		if (scrapeTimers.containsKey(marketName)) {
 			throw new ScrapeTimerException(String.format("Timer for \"%s\" is already running.\n", marketName));
 		}
@@ -35,7 +35,7 @@ public class ScrapeTimerService {
 
 		TimerTask task = new TimerTask() {
 			public void run() {
-				DoScrape(sportName, marketName);
+				doScrape(sportName, marketName);
 			}
 		};
 		Timer timer = new Timer(String.format("ScrapeTimer-%s", sportName));
@@ -45,7 +45,7 @@ public class ScrapeTimerService {
 		scrapeTimers.put(marketName, timer);
 	}
 
-	public void StopScraper(String marketName) {
+	public void stopScraper(String marketName) {
 		if (!scrapeTimers.containsKey(marketName)) {
 			throw new ScrapeTimerException(String.format("Timer for \"%s\" is not running.\n", marketName));
 		}
@@ -56,26 +56,26 @@ public class ScrapeTimerService {
 		scrapeTimers.remove(marketName);
 	}
 
-	public void DoScrape(String sportName, String marketName) {
+	public void doScrape(String sportName, String marketName) {
 		logger.debug("Scraping \"{}\" on market \"{}\"", sportName, marketName);
 
 		try {
-			var webDriver = webDriverService.GetActiveWebDriver(sportName);
+			var webDriver = webDriverService.getActiveWebDriver(sportName);
 
-			if (!inPlay.HasLiveSportSelected(webDriver, sportName) && inPlay.IsLiveSportAvailable(webDriver, sportName)) {
-				inPlay.OpenSportOnName(webDriver, sportName);
+			if (!inPlay.hasLiveSportSelected(webDriver, sportName) && inPlay.isLiveSportAvailable(webDriver, sportName)) {
+				inPlay.openSportOnName(webDriver, sportName);
 			}
 
-			var matches = inPlay.ScrapeLiveGamesData(webDriver, sportName, marketName);
+			var matches = inPlay.scrapeLiveGamesData(webDriver, sportName, marketName);
 			if (matches.length > 0) {
-				liveMatchesService.UpdateMatches(Arrays.asList(matches));
+				liveMatchesService.updateMatches(Arrays.asList(matches));
 			}
 		} catch (Exception e) {
 			if (e instanceof org.openqa.selenium.WebDriverException) {
 				//TODO: rare event when the scrape JS is executed during a forced page reload
 			} else {
 				logger.error("Stopping scrape timer \"{}\" on market \"{}\"", sportName, marketName, e);
-				StopScraper(marketName);
+				stopScraper(marketName);
 			}
 		}
 	}

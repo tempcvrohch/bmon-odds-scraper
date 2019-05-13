@@ -24,7 +24,7 @@ public class WebDriverService {
 		this.sportWebDrivers = sportWebDrivers;
 	}
 
-	public void StartOnSportName(String sportName) {
+	public void startOnSportName(String sportName) {
 		if (sportWebDrivers.containsKey(sportName)) {
 			throw new WebDriverException(String.format("Webdriver for \"%s\" is already running.\n", sportName));
 		}
@@ -38,19 +38,19 @@ public class WebDriverService {
 		webDriver.get("https://bet365.com");
 		logger.debug("Navigated to bet365");
 
-		landing.ChooseLanguageAndNavigate(webDriver, "English", "https://bet365.com/#/IP/");
+		landing.chooseLanguageAndNavigate(webDriver, "English", "https://bet365.com/#/IP/");
 		logger.debug("Webdriver ready");
 
 		sportWebDrivers.put(sportName, webDriver);
 	}
 
-	public void StopOnSportname(String sportName) {
+	public void stopOnSportname(String sportName) {
 		logger.debug("Stopping Chrome for \"{}\"!", sportName);
-		GetActiveWebDriver(sportName).close();
+		getActiveWebDriver(sportName).close();
 		sportWebDrivers.remove(sportName);
 	}
 
-	WebDriver GetActiveWebDriver(String sportName) {
+	WebDriver getActiveWebDriver(String sportName) {
 		if (!sportWebDrivers.containsKey(sportName)) {
 			throw new WebDriverException(String.format("Webdriver for \"%s\" is not running.\n", sportName));
 		}

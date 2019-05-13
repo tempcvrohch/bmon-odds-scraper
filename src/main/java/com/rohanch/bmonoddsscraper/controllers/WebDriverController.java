@@ -14,12 +14,12 @@ public class WebDriverController {
 	private WebDriverService webDriverService;
 
 	@PostMapping("/webdriver")
-	public void StartWebDriver(@RequestBody ChromeControlRequest body) {
-		webDriverService.StartOnSportName(body.getSportName());
+	public void startWebDriver(@RequestBody ChromeControlRequest body) {
+		webDriverService.startOnSportName(body.getSportName());
 	}
 
 	@DeleteMapping("/webdriver")
-	public void StopWebDriver(@RequestBody ChromeControlRequest body) {
-		webDriverService.StopOnSportname(body.getSportName());
+	public void stopWebDriver(@RequestBody ChromeControlRequest body) {
+		webDriverService.stopOnSportname(body.getSportName());
 	}
 }

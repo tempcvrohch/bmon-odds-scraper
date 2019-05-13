@@ -22,13 +22,13 @@ public class UserController {
 	private BetRepository betRepository;
 
 	@GetMapping("/user/bets/pending")
-	public Bet[] GetUserBetsPending(@AuthenticationPrincipal UserWrapper user) {
-		return betRepository.GetBetsPendingOnUserId(user.getUser().getId());
+	public Bet[] getUserBetsPending(@AuthenticationPrincipal UserWrapper user) {
+		return betRepository.getBetsPendingOnUserId(user.getUser().getId());
 	}
 
 	@GetMapping("/user/session")
-	public Session GetUserSession(@AuthenticationPrincipal UserWrapper user) {
-		var pendingBetsAmount = betRepository.GetAmountBetsPendingOnUserId(user.getUser().getId(), Bet.BetStatus.PENDING.name());
+	public Session getUserSession(@AuthenticationPrincipal UserWrapper user) {
+		var pendingBetsAmount = betRepository.getAmountBetsPendingOnUserId(user.getUser().getId(), Bet.BetStatus.PENDING.name());
 		return new Session(user.getUsername(), user.getUser().getBalance(), pendingBetsAmount);
 	}
 }

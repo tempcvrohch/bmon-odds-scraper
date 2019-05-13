@@ -19,8 +19,8 @@ public class BetResultService {
 	@Autowired
 	private BetService betService;
 
-	void ProcessUserBetsOnMatch(Match match) {
-		var pendingBets = betRepository.FindBetsByMatchId(match.getId());
+	void processUserBetsOnMatch(Match match) {
+		var pendingBets = betRepository.findBetsByMatchId(match.getId());
 		if (pendingBets.size() == 0) {
 			return;
 		}
@@ -33,10 +33,10 @@ public class BetResultService {
 
 	private void processFinishedMatchBet(Match match, Bet bet, int winnerIndex) {
 		if (winnerIndex == -1) {
-			betService.ProcessVoidBet(bet);
+			betService.processVoidBet(bet);
 		} else {
 			var winningPlayerName = match.getMatchState().getMarketStates().get(winnerIndex).getPlayerName();
-			betService.ProcessFinishedBet(bet, bet.getMarketState().getPlayerName().equals(winningPlayerName));
+			betService.processFinishedBet(bet, bet.getMarketState().getPlayerName().equals(winningPlayerName));
 		}
 	}
 

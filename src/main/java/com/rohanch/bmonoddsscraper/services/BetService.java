@@ -21,7 +21,7 @@ public class BetService {
 	private MarketStateRepository marketStateRepository;
 
 	@Transactional
-	public void AddBet(User user, Bet bet) {
+	public void addBet(User user, Bet bet) {
 		if (user.getBalance() < bet.getStake()) {
 			throw new InsufficientBalanceException();
 		}
@@ -30,7 +30,7 @@ public class BetService {
 			throw new StakeOutOfBoundsException();
 		}
 
-		var previousBet = betRepository.GetBetOnMarketStateIdAndUserId(bet.getMarketState().getId(), user.getId());
+		var previousBet = betRepository.getBetOnMarketStateIdAndUserId(bet.getMarketState().getId(), user.getId());
 		if (previousBet != null) {
 			throw new BetAlreadyPlacedException();
 		}
@@ -65,7 +65,7 @@ public class BetService {
 		return 1 + (leftSideOdd / rightSideOdd);
 	}
 
-	void ProcessFinishedBet(Bet bet, boolean wonBet) {
+	void processFinishedBet(Bet bet, boolean wonBet) {
 		Bet.BetStatus status = Bet.BetStatus.LOSS;
 		if (wonBet) {
 			status = Bet.BetStatus.WIN;
@@ -75,7 +75,7 @@ public class BetService {
 		betRepository.updateBetOnBetStatusById(bet.getUser().getId(), status);//.name()
 	}
 
-	void ProcessVoidBet(Bet bet) {
+	void processVoidBet(Bet bet) {
 		userRepository.incrementBalanceByUsername(bet.getUser().getId(), bet.getStake());
 		betRepository.updateBetOnBetStatusById(bet.getUser().getId(), Bet.BetStatus.VOID); //.name()
 	}

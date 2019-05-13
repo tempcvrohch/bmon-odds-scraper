@@ -32,7 +32,7 @@ public class MatchController {
 	private LiveMatchesService liveMatchesService;
 
 	@GetMapping("/matches")
-	public Iterable<Match> GetMatches(@RequestParam Map<String, String> queryParameters) {
+	public Iterable<Match> getMatches(@RequestParam Map<String, String> queryParameters) {
 		if (queryParameters.containsKey("from") && queryParameters.containsKey("to")) {
 			var dateFrom = Date.from(Instant.parse(queryParameters.get("from")));
 			var dateTo = Date.from(Instant.parse(queryParameters.get("to")));
@@ -44,7 +44,7 @@ public class MatchController {
 	}
 
 	@GetMapping("/match/{id}")
-	public Match GetMatchOnId(@PathVariable("id") Long id) {
+	public Match getMatchOnId(@PathVariable("id") Long id) {
 		var optionalMatch = matchRepository.findById(id);
 		var match = optionalMatch.orElseThrow(MatchNotFound::new);
 		match.setMatchStates(matchStateRepository.findAllByMatchId(id)); //TODO: jpa should probably handle the child entities
@@ -54,12 +54,12 @@ public class MatchController {
 
 	//TODO: place this in a new controller?
 	@GetMapping("/match/{id}/market/latest")
-	public MarketState[] GetLatestMarketOnMatchId(@PathVariable("id") Long id) {
+	public MarketState[] getLatestMarketOnMatchId(@PathVariable("id") Long id) {
 		return marketStateRepository.findLatestMarketStatesOnMatchId(id);
 	}
 
 	@GetMapping("/matches/recent")
-	public Iterable<Match> GetRecentMatches() {
+	public Iterable<Match> getRecentMatches() {
 		var calendar = new GregorianCalendar();
 		calendar.add(Calendar.DATE, -1);
 		var matches = matchRepository.findAfterTimestamp(new Timestamp(calendar.getTimeInMillis()));

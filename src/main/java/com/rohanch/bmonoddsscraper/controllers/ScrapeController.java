@@ -14,17 +14,17 @@ public class ScrapeController {
 	private ScrapeTimerService scrapeTimerService;
 
 	@PostMapping("/scrape")
-	public void DoScrape(@RequestBody ChromeControlRequest body) {
-		scrapeTimerService.DoScrape(body.getSportName(), body.getMarketName());
+	public void doScrape(@RequestBody ChromeControlRequest body) {
+		scrapeTimerService.doScrape(body.getSportName(), body.getMarketName());
 	}
 
 	@PostMapping("/scrape/timer")
-	public void StartScraper(@RequestBody ChromeControlRequest body) {
-		scrapeTimerService.StartScraper(body.getSportName(), body.getMarketName());
+	public void startScraper(@RequestBody ChromeControlRequest body) {
+		scrapeTimerService.startScraper(body.getSportName(), body.getMarketName());
 	}
 
 	@DeleteMapping("/scrape/timer")
-	public void StopScraper(@RequestBody ChromeControlRequest body) {
-		scrapeTimerService.StopScraper(body.getMarketName());
+	public void stopScraper(@RequestBody ChromeControlRequest body) {
+		scrapeTimerService.stopScraper(body.getMarketName());
 	}
 }

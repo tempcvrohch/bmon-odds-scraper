@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class Landing {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	public void ChooseLanguageAndNavigate(WebDriver webDriver, String lang, String targetPageURL) {
+	public void chooseLanguageAndNavigate(WebDriver webDriver, String lang, String targetPageURL) {
 		WebElement langList = webDriver.findElement(By.className("lpnm"));
 		var languages = langList.findElements(By.tagName("a"));
 		var optLanguage = languages.stream().filter(e -> e.getText().equals(lang)).findFirst();
