@@ -14,6 +14,7 @@ public class RegisterController {
 	@Autowired
 	private UserDetailService userDetailService;
 
+	//TODO add annotation javax validation
 	@PostMapping("/register")
 	public void register(@RequestBody User newUser) {
 		if (isInvalidInput(newUser.getUsername())) {

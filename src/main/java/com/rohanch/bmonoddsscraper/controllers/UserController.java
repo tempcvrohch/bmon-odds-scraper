@@ -3,32 +3,30 @@ package com.rohanch.bmonoddsscraper.controllers;
 import com.rohanch.bmonoddsscraper.models.db.Bet;
 import com.rohanch.bmonoddsscraper.models.generic.UserWrapper;
 import com.rohanch.bmonoddsscraper.models.response.Session;
-import com.rohanch.bmonoddsscraper.repositories.BetRepository;
-import com.rohanch.bmonoddsscraper.services.BetService;
+import com.rohanch.bmonoddsscraper.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = {"*"}, allowCredentials = "true")
 //TODO: avoid duplication across controllers
 public class UserController {
 	@Autowired
-	private BetService betService;
+	private UserService userService;
 
-	@Autowired
-	private BetRepository betRepository;
 
 	@GetMapping("/user/bets/pending")
-	public Bet[] getUserBetsPending(@AuthenticationPrincipal UserWrapper user) {
-		return betRepository.getBetsPendingOnUserId(user.getUser().getId());
+	public List<Bet> getUserBetsPending(@AuthenticationPrincipal UserWrapper userWrapper) {
+		return userService.getUserPendingBets(userWrapper);
 	}
 
 	@GetMapping("/user/session")
-	public Session getUserSession(@AuthenticationPrincipal UserWrapper user) {
-		var pendingBetsAmount = betRepository.getAmountBetsPendingOnUserId(user.getUser().getId(), Bet.BetStatus.PENDING.name());
-		return new Session(user.getUsername(), user.getUser().getBalance(), pendingBetsAmount);
+	public Session getUserSession(@AuthenticationPrincipal UserWrapper userWrapper) {
+		return userService.getUserSession(userWrapper);
 	}
 }

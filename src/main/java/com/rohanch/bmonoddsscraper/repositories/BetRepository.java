@@ -13,7 +13,7 @@ public interface BetRepository extends JpaRepository<Bet, Long> {
 	Bet getBetOnMarketStateIdAndUserId(@Param("marketStateId") Long marketStateId, @Param("userId") Long userId);
 
 	@Query(value = "SELECT * FROM bets b WHERE b.user_id = :userId ORDER BY b.created_at DESC LIMIT 25", nativeQuery = true)
-	Bet[] getBetsPendingOnUserId(@Param("userId") Long userId);
+	List<Bet> getBetsPendingOnUserId(@Param("userId") Long userId);
 
 	@Query(value = "SELECT COUNT(id) FROM bets b WHERE b.user_id = :userId AND b.status = :status", nativeQuery = true)
 	long getAmountBetsPendingOnUserId(@Param("userId") Long userId, @Param("status") String status);
