@@ -1,9 +1,6 @@
 package com.rohanch.bmonoddsscraper.controllers;
 
-import com.rohanch.bmonoddsscraper.services.BetService;
-import com.rohanch.bmonoddsscraper.services.ScrapeTimerService;
-import com.rohanch.bmonoddsscraper.services.UserDetailService;
-import com.rohanch.bmonoddsscraper.services.WebDriverService;
+import com.rohanch.bmonoddsscraper.services.*;
 import com.rohanch.bmonoddsscraper.services.helpers.Inject;
 import com.rohanch.bmonoddsscraper.services.pages.InPlay;
 import com.rohanch.bmonoddsscraper.services.pages.Landing;
@@ -20,7 +17,7 @@ public class BasicControllerAdvice {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ScrapeTimerService.ScrapeTimerException.class, WebDriverService.WebDriverException.class,
-			MatchController.MatchNotFound.class, UserDetailService.UsernameTakenException.class, BetService.BetAlreadyPlacedException.class,
+			MatchService.MatchNotFound.class, UserDetailService.UsernameTakenException.class, BetService.BetAlreadyPlacedException.class,
 			BetService.InsufficientBalanceException.class, BetService.UnknownMarketStateOnBetException.class, BetService.StakeOutOfBoundsException.class})
 	public void handleBadRequest(Exception exception) {
 		logger.info(exception.getLocalizedMessage());

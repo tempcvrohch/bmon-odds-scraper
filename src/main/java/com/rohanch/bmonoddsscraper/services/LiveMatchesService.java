@@ -44,7 +44,6 @@ public class LiveMatchesService {
 	 *
 	 * @param updatedMatches The currently scraped list of matches.
 	 */
-//	@Transactional
 	void updateMatches(List<Match> updatedMatches) {
 		if (persistedMatchEntities.isEmpty()) {
 			persistedMatchEntities = getRecentMatchesFromDB();

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = {"*"}, allowCredentials = "true")
-//TODO: avoid duplication across controllers
 public class BetController {
 	@Autowired
 	private BetService betService;

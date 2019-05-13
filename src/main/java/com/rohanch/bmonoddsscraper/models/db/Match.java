@@ -16,7 +16,7 @@ public class Match extends BaseEntity {
 	private Long id;
 
 	@Column(unique = true, nullable = false)
-	@JsonProperty("bId")
+	@JsonProperty("bId") //without this bId is not assigned by objectMapper+lombok
 	private String bId;
 
 	@Column(nullable = false)
