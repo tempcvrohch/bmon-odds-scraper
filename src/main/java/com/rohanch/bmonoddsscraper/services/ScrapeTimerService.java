@@ -1,6 +1,6 @@
 package com.rohanch.bmonoddsscraper.services;
 
-import com.rohanch.bmonoddsscraper.services.pages.InPlay;
+import com.rohanch.bmonoddsscraper.services.pages.InPlayPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class ScrapeTimerService {
 	private LiveMatchesService liveMatchesService;
 
 	@Autowired
-	private InPlay inPlay;
+	private InPlayPage inPlay;
 
 	private HashMap<String, Timer> scrapeTimers = new HashMap<>();
 
@@ -70,13 +70,11 @@ public class ScrapeTimerService {
 			if (matches.length > 0) {
 				liveMatchesService.updateMatches(Arrays.asList(matches));
 			}
+		} catch (org.openqa.selenium.WebDriverException e) {
+			//TODO: rare event when the scrape JS is executed during a forced page reload
 		} catch (Exception e) {
-			if (e instanceof org.openqa.selenium.WebDriverException) {
-				//TODO: rare event when the scrape JS is executed during a forced page reload
-			} else {
-				logger.error("Stopping scrape timer \"{}\" on market \"{}\"", sportName, marketName, e);
-				stopScraper(marketName);
-			}
+			logger.error("Stopping scrape timer \"{}\" on market \"{}\"", sportName, marketName, e);
+			stopScraper(marketName);
 		}
 	}
 

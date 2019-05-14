@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InPlay {
+public class InPlayPage {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -38,7 +38,7 @@ public class InPlay {
 	public void openSportOnName(WebDriver webDriver, String sportName) {
 		var sportSelectElement = webDriver.findElement(By.xpath(String.format("//%s[text()=\"%s\"]", "div", sportName)));
 
-		logger.debug("Clicking sport: \"{}\" in InPlay page", sportName);
+		logger.debug("Clicking sport: \"{}\" in InPlayPage page", sportName);
 		sportSelectElement.click();
 	}
 

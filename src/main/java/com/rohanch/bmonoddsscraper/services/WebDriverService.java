@@ -1,6 +1,6 @@
 package com.rohanch.bmonoddsscraper.services;
 
-import com.rohanch.bmonoddsscraper.services.pages.Landing;
+import com.rohanch.bmonoddsscraper.services.pages.LandingPage;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -18,7 +18,7 @@ public class WebDriverService {
 	private HashMap<String, WebDriver> sportWebDrivers = new HashMap<>();
 
 	@Autowired
-	private Landing landing;
+	private LandingPage landing;
 
 	public void setSportWebDrivers(HashMap<String, WebDriver> sportWebDrivers) {
 		this.sportWebDrivers = sportWebDrivers;

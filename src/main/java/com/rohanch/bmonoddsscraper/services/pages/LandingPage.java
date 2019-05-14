@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Landing {
+public class LandingPage {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	public void chooseLanguageAndNavigate(WebDriver webDriver, String lang, String targetPageURL) {
