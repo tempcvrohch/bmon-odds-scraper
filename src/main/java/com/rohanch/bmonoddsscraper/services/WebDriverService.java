@@ -7,6 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -16,6 +17,9 @@ import java.util.concurrent.TimeUnit;
 public class WebDriverService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private HashMap<String, WebDriver> sportWebDrivers = new HashMap<>();
+
+	@Value("${bmon.book_url}")
+	private String bookUrl;
 
 	@Autowired
 	private LandingPage landing;
@@ -35,10 +39,9 @@ public class WebDriverService {
 		webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		webDriver.manage().window().setSize(new Dimension(1920, 900));
 
-		webDriver.get("https://bet365.com");
-		logger.debug("Navigated to bet365");
+		webDriver.get(bookUrl);
 
-		landing.chooseLanguageAndNavigate(webDriver, "English", "https://bet365.com/#/IP/");
+		landing.chooseLanguageAndNavigate(webDriver, "English", String.format("%s/#/IP/", bookUrl));
 		logger.debug("Webdriver ready");
 
 		sportWebDrivers.put(sportName, webDriver);

@@ -152,7 +152,7 @@ public class LiveMatchesService implements ApplicationRunner {
 	 * @param updatedMatch   the updated match
 	 */
 	private void updateMatchNestedElements(Match persistedMatch, Match updatedMatch) {
-		//The updatedMatch is directly from bet365 and doesn't have JPA Parents set so copy the ones of our cached match
+		//The updatedMatch is directly from the book and doesn't have JPA Parents set so copy the ones of our cached match
 		var preparedMatch = setParentReferencesOnChildren(updatedMatch, persistedMatch);
 
 		//Check for a point/set/serve index or score difference

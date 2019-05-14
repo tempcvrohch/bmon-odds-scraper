@@ -22,10 +22,10 @@ public class MarketState extends BaseEntity {
 	@Column(nullable = false)
 	private String playerName;
 
-	@Column(name = "b365_fixture_id", nullable = false)
+	@Column(name = "book_fixture_id", nullable = false)
 	private Long fixtureId;
 
-	@Column(name = "b365_bet_id", nullable = false)
+	@Column(name = "book_bet_id", nullable = false)
 	private Long betId;
 
 	@Column(nullable = false)
