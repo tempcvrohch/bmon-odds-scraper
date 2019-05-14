@@ -53,7 +53,7 @@ public class MatchService {
 		var calendar = new GregorianCalendar();
 		calendar.add(Calendar.DATE, -1);
 		var matches = matchRepository.findAfterTimestamp(new Timestamp(calendar.getTimeInMillis()));
-		matches.forEach(match -> match.setLive(liveMatchesService.getLiveMatchEntities().contains(match)));
+		matches.forEach(match -> match.setLive(liveMatchesService.getLiveMatchEntities().containsKey(match.getBId())));
 
 		return matches;
 	}

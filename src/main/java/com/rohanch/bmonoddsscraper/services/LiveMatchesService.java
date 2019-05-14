@@ -7,18 +7,17 @@ import com.rohanch.bmonoddsscraper.repositories.MatchStateRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
-public class LiveMatchesService {
+public class LiveMatchesService implements ApplicationRunner {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -33,10 +32,17 @@ public class LiveMatchesService {
 	@Autowired
 	private MarketStateRepository marketStateRepository;
 
-	private List<Match> persistedMatchEntities = new ArrayList<>(); //contains matches of last 24H
-	private List<Match> liveMatchEntities = new ArrayList<>(); //contains matches of the current updateMatches tick
-	public List<Match> getLiveMatchEntities() {
+	//TODO potential threading issues
+	private Map<String, Match> persistedMatchEntities = new HashMap<>(); //contains matches of last 24H
+	private Map<String, Match> liveMatchEntities = new HashMap<>(); //contains matches of the current updateMatches tick
+
+	public Map<String, Match> getLiveMatchEntities() {
 		return liveMatchEntities;
+	}
+
+	public void run(ApplicationArguments args) {
+		//loads previous matches so comparisons can be resumed in case of server restart/outage
+		persistedMatchEntities = getRecentMatchesFromDB();
 	}
 
 	/**
@@ -45,44 +51,30 @@ public class LiveMatchesService {
 	 * @param updatedMatches The currently scraped list of matches.
 	 */
 	void updateMatches(List<Match> updatedMatches) {
-		if (persistedMatchEntities.isEmpty()) {
-			persistedMatchEntities = getRecentMatchesFromDB();
-		} else {
-			processDisappearedMatches(liveMatchEntities, updatedMatches);
+		if (updatedMatches.isEmpty()) {
+			return;
 		}
 
-		liveMatchEntities = updatedMatches;
+		var currentMatches = matchesListToMap(updatedMatches);
+		processDisappearedMatches(liveMatchEntities, currentMatches);
 
-		logger.debug("Checking {} matches.", liveMatchEntities.size());
-
-		liveMatchEntities.forEach(this::processUpdatedLiveMatch);
+		liveMatchEntities = currentMatches;
+		liveMatchEntities.forEach((key, match) -> processUpdatedLiveMatch(match));
 	}
 
 	private void processUpdatedLiveMatch(Match liveMatch) {
-		var optMatch = persistedMatchEntities
-				.stream()
-				.filter(fMatch -> fMatch.equals(liveMatch))
-				.findFirst();
-
-		if (optMatch.isPresent()) {
-			var persistedMatch = optMatch.get();
-			updateMatchNestedElements(persistedMatch, liveMatch);
+		if (persistedMatchEntities.containsKey(liveMatch.getBId())) {
+			updateMatchNestedElements(persistedMatchEntities.get(liveMatch.getBId()), liveMatch);
 		} else {
 			persistNewMatch(liveMatch);
 		}
 	}
 
-	private void processDisappearedMatches(List<Match> previousMatchEntities, List<Match> currentMatchEntities) {
-		previousMatchEntities.forEach(prevMatch -> {
-			var optCurMatch = currentMatchEntities.stream()
-					.filter(curMatch -> curMatch.equals(prevMatch)).findFirst();
-
-			if (optCurMatch.isEmpty()) {
-				//this prevMatch doesn't have the db reference so find the correct one.
-				var optLiveMatch = persistedMatchEntities.stream()
-						.filter(persistedMatch -> persistedMatch.equals(prevMatch)).findFirst();
-
-				optLiveMatch.ifPresent(match -> betResultService.processUserBetsOnMatch(match));
+	private void processDisappearedMatches(Map<String, Match> previousMatchEntities, Map<String, Match> currentMatchEntities) {
+		previousMatchEntities.forEach((key, prevMatch) -> {
+			//if the match isn't available in the newest update tick the match is over
+			if (!currentMatchEntities.containsKey(prevMatch.getBId()) && persistedMatchEntities.containsKey(prevMatch.getBId())) {
+				betResultService.processUserBetsOnMatch(persistedMatchEntities.get(prevMatch.getBId()));
 			}
 		});
 	}
@@ -90,10 +82,19 @@ public class LiveMatchesService {
 	/**
 	 * In case of an application restart the persisted matches variable should be consistent with what is in the database.
 	 */
-	private ArrayList<Match> getRecentMatchesFromDB() {
+	private Map<String, Match> getRecentMatchesFromDB() {
 		var calendar = new GregorianCalendar();
 		calendar.add(Calendar.DATE, -2);
-		return new ArrayList<>(matchRepository.findAfterTimestamp(new Timestamp(calendar.getTimeInMillis())));
+		var dbMatchesList = new ArrayList<>(matchRepository.findAfterTimestamp(new Timestamp(calendar.getTimeInMillis())));
+
+		return matchesListToMap(dbMatchesList);
+	}
+
+	private Map<String, Match> matchesListToMap(List<Match> matches) {
+		var matchesMap = new HashMap<String, Match>();
+		matches.forEach((match -> matchesMap.put(match.getBId(), match)));
+
+		return matchesMap;
 	}
 
 	/**
@@ -137,7 +138,7 @@ public class LiveMatchesService {
 
 		//add the inserted marketStates back to the insertedMatch object(they now also have DB ids)
 		insertedMatch.getMatchState().setMarketStates(insertedMarketStates);
-		persistedMatchEntities.add(insertedMatch);
+		persistedMatchEntities.put(insertedMatch.getBId(), insertedMatch);
 	}
 
 	/**
@@ -154,7 +155,7 @@ public class LiveMatchesService {
 		//The updatedMatch is directly from bet365 and doesn't have JPA Parents set so copy the ones of our cached match
 		var preparedMatch = setParentReferencesOnChildren(updatedMatch, persistedMatch);
 
-		//Check for a point/set/serve index/score difference
+		//Check for a point/set/serve index or score difference
 		if (!persistedMatch.getMatchState().equals(preparedMatch.getMatchState())) {
 			persistedMatch.setMatchState(preparedMatch.getMatchState());
 			var insertedMatchState = matchStateRepository.save(persistedMatch.getMatchState());

@@ -2,8 +2,8 @@ package com.rohanch.bmonoddsscraper.controllers;
 
 import com.rohanch.bmonoddsscraper.services.*;
 import com.rohanch.bmonoddsscraper.services.helpers.Inject;
-import com.rohanch.bmonoddsscraper.services.pages.InPlay;
-import com.rohanch.bmonoddsscraper.services.pages.Landing;
+import com.rohanch.bmonoddsscraper.services.pages.InPlayPage;
+import com.rohanch.bmonoddsscraper.services.pages.LandingPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,13 +24,13 @@ public class BasicControllerAdvice {
 	}
 
 	@ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-	@ExceptionHandler({Landing.LanguageNotAvailableException.class})
+	@ExceptionHandler({LandingPage.LanguageNotAvailableException.class})
 	public void handleLanguageError(Exception exception) {
 		logger.info(exception.getLocalizedMessage());
 	}
 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler({InPlay.InPlayException.class, Inject.JSFileNotFoundException.class, BetService.InvalidFractionalOddException.class})
+	@ExceptionHandler({InPlayPage.InPlayException.class, Inject.JSFileNotFoundException.class, BetService.InvalidFractionalOddException.class})
 	public void handleServerError(Exception exception) {
 		logger.error(exception.getLocalizedMessage());
 	}
